@@ -1,1 +1,1 @@
-rootProject.name = "storage"
+rootProject.name = "cloud-file-storage"
