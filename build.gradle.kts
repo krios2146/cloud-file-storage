@@ -1,12 +1,12 @@
 plugins {
 	java
+	kotlin("jvm") version "1.8.21"
 	id("org.springframework.boot") version "3.1.0"
 	id("io.spring.dependency-management") version "1.1.0"
 }
 
 group = "com.filestorage"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_17
 
 configurations {
 	compileOnly {
@@ -30,8 +30,12 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
+	implementation(kotlin("stdlib-jdk8"))
 }
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+kotlin {
+	jvmToolchain(17)
 }
