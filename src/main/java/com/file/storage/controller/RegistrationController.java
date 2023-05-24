@@ -32,6 +32,6 @@ public class RegistrationController {
                 saved.getLogin()
         );
 
-        return ResponseEntity.ok(userResponseDto);
+        return ResponseEntity.status(CREATED).body(userResponseDto);
     }
 }
