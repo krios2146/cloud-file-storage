@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  database:
+    image: postgres:latest
+    volumes:
+      - /var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=cloud-file-storage
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+  keycloak:
+    image: quay.io/keycloak/keycloak
+    command: start-dev
+    environment:
+      - KEYCLOAK_ADMIN=root
+      - KEYCLOAK_ADMIN_PASSWORD=root
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://database:5432/cloud-file-storage
+      - KC_DB_USERNAME=user
+      - KC_DB_PASSWORD=password
+    depends_on:
+      - database
+    ports:
+      - "8080:8080"
