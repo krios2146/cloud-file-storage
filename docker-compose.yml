@@ -11,7 +11,7 @@ services:
       - POSTGRES_PASSWORD=password
   keycloak:
     image: quay.io/keycloak/keycloak
-    command: start-dev
+    command: start-dev --import-realm
     environment:
       - KEYCLOAK_ADMIN=root
       - KEYCLOAK_ADMIN_PASSWORD=root
@@ -23,3 +23,5 @@ services:
       - database
     ports:
       - "8080:8080"
+    volumes:
+      - ./src/main/resources/keycloak/realm/realm.json:/opt/keycloak/data/import/realm-export.json
