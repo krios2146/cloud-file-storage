@@ -25,3 +25,15 @@ services:
       - "8080:8080"
     volumes:
       - ./src/main/resources/keycloak/realm/realm.json:/opt/keycloak/data/import/realm-export.json
+  minio:
+    image: quay.io/minio/minio
+    command: server /data --console-address ":9001"
+    environment:
+      - MINIO_IDENTITY_OPENID_CONFIG_URL=http://localhost:8080/realms/cloud-file-storage/.well-known/openid-configuration
+      - MINIO_IDENTITY_OPENID_CLAIM_USERINFO=http://localhost:8080/realms/cloud-file-storage/protocol/openid-connect/userinfo
+      - MINIO_IDENTITY_OPENID_VENDOR=keycloak
+      - MINIO_IDENTITY_OPENID_KEYCLOAK_REALM=cloud-file-storage
+      - MINIO_IDENTITY_OPENID_KEYCLOAK_ADMIN_URL=http://localhost:8080/admin/
+    ports:
+      - "9000:9000"
+      - "9001:9001"
