@@ -11,25 +11,10 @@ spring:
     properties:
       hibernate:
         dialect: "org.hibernate.dialect.PostgreSQLDialect"
-  security:
-    oauth2:
-      client:
-        registration:
-          github:
-            client-id: "9d84ef4aabd0ee642b8e"
-            client-secret: "fff2814575563135bd0e36465f3551c0b70e6403"
-          keycloak:
-            client-id: "cloud-file-storage"
-            client-secret: "qKiq0NZSRpsQnzEmXGttzK9blQwhbrud"
-            scope: "openid"
-            authorization-grant-type: "authorization_code"
-        provider:
-          keycloak:
-            issuer-uri: "http://localhost:8080/realms/cloud-file-storage"
 
 logging:
   level:
     org.springframework: trace
 
 server:
-  port: 8081
+  port: 8080
