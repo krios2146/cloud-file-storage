@@ -206,8 +206,8 @@
             "client": {
               "realm-management": [
                 "query-groups",
-                "view-events",
                 "query-clients",
+                "view-events",
                 "view-users",
                 "manage-realm",
                 "manage-authorization",
@@ -295,6 +295,16 @@
       "security-admin-console": [],
       "admin-cli": [],
       "cloud-file-storage": [],
+      "minio": [
+        {
+          "id": "9f0aa46b-2dbd-436b-b780-cbc29439d028",
+          "name": "uma_protection",
+          "composite": false,
+          "clientRole": true,
+          "containerId": "c94bb27b-7fcb-4b0c-bb4d-196b1d8fd9f1",
+          "attributes": {}
+        }
+      ],
       "account-console": [],
       "broker": [],
       "account": [
@@ -346,9 +356,9 @@
   "otpPolicyPeriod": 30,
   "otpPolicyCodeReusable": false,
   "otpSupportedApplications": [
-    "totpAppGoogleName",
+    "totpAppFreeOTPName",
     "totpAppMicrosoftAuthenticatorName",
-    "totpAppFreeOTPName"
+    "totpAppGoogleName"
   ],
   "webAuthnPolicyRpEntityName": "keycloak",
   "webAuthnPolicySignatureAlgorithms": [
@@ -411,6 +421,27 @@
           "delete-account",
           "view-groups",
           "manage-account"
+        ]
+      },
+      "notBefore": 0,
+      "groups": []
+    },
+    {
+      "id": "1c9faf7c-e136-4a68-8500-c5a51cd5774e",
+      "createdTimestamp": 1690277399750,
+      "username": "service-account-minio",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": false,
+      "serviceAccountClientId": "minio",
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": [
+        "default-roles-cloud-file-storage"
+      ],
+      "clientRoles": {
+        "minio": [
+          "uma_protection"
         ]
       },
       "notBefore": 0,
@@ -628,7 +659,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "qKiq0NZSRpsQnzEmXGttzK9blQwhbrud",
+      "secret": "**********",
       "redirectUris": [
         "*"
       ],
@@ -745,6 +776,7 @@
       }
     },
     {
+      "id": "c94bb27b-7fcb-4b0c-bb4d-196b1d8fd9f1",
       "clientId": "minio",
       "name": "",
       "description": "",
@@ -755,7 +787,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": true,
       "clientAuthenticatorType": "client-secret",
-      "secret": "dpSRH9HwEzBUyieeQlmDjL2VhvfhiGbq",
+      "secret": "**********",
       "redirectUris": [
         "/*"
       ],
@@ -785,6 +817,7 @@
       "nodeReRegistrationTimeout": -1,
       "protocolMappers": [
         {
+          "id": "2c2ddb81-afac-4e2f-998c-cb43ff3ee873",
           "name": "Client Host",
           "protocol": "openid-connect",
           "protocolMapper": "oidc-usersessionmodel-note-mapper",
@@ -798,6 +831,7 @@
           }
         },
         {
+          "id": "f10fe575-5bf5-459e-8282-2bd00864e4a6",
           "name": "Client IP Address",
           "protocol": "openid-connect",
           "protocolMapper": "oidc-usersessionmodel-note-mapper",
@@ -811,6 +845,7 @@
           }
         },
         {
+          "id": "841edfc3-4cd4-498e-b51d-b94bc76a185a",
           "name": "Client ID",
           "protocol": "openid-connect",
           "protocolMapper": "oidc-usersessionmodel-note-mapper",
@@ -837,10 +872,48 @@
         "offline_access",
         "microprofile-jwt"
       ],
-      "access": {
-        "view": true,
-        "configure": true,
-        "manage": true
+      "authorizationSettings": {
+        "allowRemoteResourceManagement": true,
+        "policyEnforcementMode": "ENFORCING",
+        "resources": [
+          {
+            "name": "Default Resource",
+            "type": "urn:minio:resources:default",
+            "ownerManagedAccess": false,
+            "attributes": {},
+            "_id": "9c06d0a3-208f-4553-bb56-9cb554d20201",
+            "uris": [
+              "/*"
+            ]
+          }
+        ],
+        "policies": [
+          {
+            "id": "b3df73d9-d785-4fc8-bafe-bf1fd610ff68",
+            "name": "Default Policy",
+            "description": "A policy that grants access only for users within this realm",
+            "type": "js",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+              "code": "// by default, grants any permission associated with this policy\n$evaluation.grant();\n"
+            }
+          },
+          {
+            "id": "e8e2f0e6-7b13-4bd5-9bbc-0c1ac75cf2d7",
+            "name": "Default Permission",
+            "description": "A permission that applies to the default resource type",
+            "type": "resource",
+            "logic": "POSITIVE",
+            "decisionStrategy": "UNANIMOUS",
+            "config": {
+              "defaultResourceType": "urn:minio:resources:default",
+              "applyPolicies": "[\"Default Policy\"]"
+            }
+          }
+        ],
+        "scopes": [],
+        "decisionStrategy": "UNANIMOUS"
       }
     },
     {
@@ -1475,6 +1548,7 @@
   "browserSecurityHeaders": {
     "contentSecurityPolicyReportOnly": "",
     "xContentTypeOptions": "nosniff",
+    "referrerPolicy": "no-referrer",
     "xRobotsTag": "none",
     "xFrameOptions": "SAMEORIGIN",
     "contentSecurityPolicy": "frame-src 'self'; frame-ancestors 'self'; object-src 'none';",
@@ -1525,14 +1599,14 @@
         "subComponents": {},
         "config": {
           "allowed-protocol-mapper-types": [
-            "oidc-usermodel-property-mapper",
-            "oidc-usermodel-attribute-mapper",
-            "oidc-sha256-pairwise-sub-mapper",
             "saml-role-list-mapper",
-            "saml-user-attribute-mapper",
+            "saml-user-property-mapper",
+            "oidc-usermodel-attribute-mapper",
             "oidc-full-name-mapper",
-            "oidc-address-mapper",
-            "saml-user-property-mapper"
+            "oidc-usermodel-property-mapper",
+            "oidc-sha256-pairwise-sub-mapper",
+            "saml-user-attribute-mapper",
+            "oidc-address-mapper"
           ]
         }
       },
@@ -1564,14 +1638,14 @@
         "subComponents": {},
         "config": {
           "allowed-protocol-mapper-types": [
-            "oidc-usermodel-property-mapper",
-            "oidc-full-name-mapper",
-            "saml-user-attribute-mapper",
             "saml-user-property-mapper",
-            "saml-role-list-mapper",
-            "oidc-sha256-pairwise-sub-mapper",
             "oidc-address-mapper",
-            "oidc-usermodel-attribute-mapper"
+            "saml-user-attribute-mapper",
+            "oidc-usermodel-property-mapper",
+            "oidc-sha256-pairwise-sub-mapper",
+            "oidc-usermodel-attribute-mapper",
+            "oidc-full-name-mapper",
+            "saml-role-list-mapper"
           ]
         }
       },
@@ -1685,40 +1759,6 @@
           "priority": 20,
           "autheticatorFlow": true,
           "flowAlias": "Verify Existing Account by Re-authentication",
-          "userSetupAllowed": false
-        }
-      ]
-    },
-    {
-      "id": "2aac1e16-a5da-4135-aa0e-48b796fefabb",
-      "alias": "Authentication Options",
-      "description": "Authentication options.",
-      "providerId": "basic-flow",
-      "topLevel": false,
-      "builtIn": true,
-      "authenticationExecutions": [
-        {
-          "authenticator": "basic-auth",
-          "authenticatorFlow": false,
-          "requirement": "REQUIRED",
-          "priority": 10,
-          "autheticatorFlow": false,
-          "userSetupAllowed": false
-        },
-        {
-          "authenticator": "basic-auth-otp",
-          "authenticatorFlow": false,
-          "requirement": "DISABLED",
-          "priority": 20,
-          "autheticatorFlow": false,
-          "userSetupAllowed": false
-        },
-        {
-          "authenticator": "auth-spnego",
-          "authenticatorFlow": false,
-          "requirement": "DISABLED",
-          "priority": 30,
-          "autheticatorFlow": false,
           "userSetupAllowed": false
         }
       ]
@@ -2096,32 +2136,6 @@
       ]
     },
     {
-      "id": "ca40ddd6-a4d9-471e-b318-c7d1ae5372f0",
-      "alias": "http challenge",
-      "description": "An authentication flow based on challenge-response HTTP Authentication Schemes",
-      "providerId": "basic-flow",
-      "topLevel": true,
-      "builtIn": true,
-      "authenticationExecutions": [
-        {
-          "authenticator": "no-cookie-redirect",
-          "authenticatorFlow": false,
-          "requirement": "REQUIRED",
-          "priority": 10,
-          "autheticatorFlow": false,
-          "userSetupAllowed": false
-        },
-        {
-          "authenticatorFlow": true,
-          "requirement": "REQUIRED",
-          "priority": 20,
-          "autheticatorFlow": true,
-          "flowAlias": "Authentication Options",
-          "userSetupAllowed": false
-        }
-      ]
-    },
-    {
       "id": "87cea533-7f00-47b6-9966-9d0bd8039ea2",
       "alias": "registration",
       "description": "registration flow",
@@ -2362,7 +2376,7 @@
     "cibaInterval": "5",
     "realmReusableOtpCode": "false"
   },
-  "keycloakVersion": "21.1.1",
+  "keycloakVersion": "22.0.1",
   "userManagedAccessAllowed": false,
   "clientProfiles": {
     "profiles": []
