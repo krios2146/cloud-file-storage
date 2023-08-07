@@ -9,31 +9,57 @@ services:
       - POSTGRES_DB=cloud-file-storage
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
+    networks:
+      - auth
+
   keycloak:
     image: quay.io/keycloak/keycloak
     command: start-dev --import-realm
     environment:
       - KEYCLOAK_ADMIN=root
       - KEYCLOAK_ADMIN_PASSWORD=root
+      - KEYCLOAK_FRONTEND_URL=http://localhost:8080/auth
       - KC_DB=postgres
       - KC_DB_URL=jdbc:postgresql://database:5432/cloud-file-storage
       - KC_DB_USERNAME=user
       - KC_DB_PASSWORD=password
+      - KC_HEALTH_ENABLED=true
     depends_on:
       - database
     ports:
       - "8080:8080"
     volumes:
       - ./src/main/resources/keycloak/realm/realm.json:/opt/keycloak/data/import/realm-export.json
+      - ./src/main/resources/keycloak/health-check.sh:/opt/keycloak/health-check.sh
+    healthcheck:
+      test: bash /opt/keycloak/health-check.sh
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - auth
+
   minio:
     image: quay.io/minio/minio
     command: server /data --console-address ":9001"
     environment:
-      - MINIO_IDENTITY_OPENID_CONFIG_URL=http://localhost:8080/realms/cloud-file-storage/.well-known/openid-configuration
+      - MINIO_IDENTITY_OPENID_CONFIG_URL=http://keycloak:8080/realms/cloud-file-storage/.well-known/openid-configuration
+      - MINIO_IDENTITY_OPENID_CLIENT_ID=minio
+      - MINIO_IDENTITY_OPENID_CLIENT_SECRET=dpSRH9HwEzBUyieeQlmDjL2VhvfhiGbq
       - MINIO_IDENTITY_OPENID_CLAIM_USERINFO=http://localhost:8080/realms/cloud-file-storage/protocol/openid-connect/userinfo
       - MINIO_IDENTITY_OPENID_VENDOR=keycloak
       - MINIO_IDENTITY_OPENID_KEYCLOAK_REALM=cloud-file-storage
       - MINIO_IDENTITY_OPENID_KEYCLOAK_ADMIN_URL=http://localhost:8080/admin/
+      - MINIO_IDENTITY_OPENID_REDIRECT_URI_DYNAMIC=on
     ports:
       - "9000:9000"
       - "9001:9001"
+    depends_on:
+      keycloak:
+        condition: service_healthy
+    networks:
+      - auth
+
+networks:
+  auth:
+    driver: bridge
