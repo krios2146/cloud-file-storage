@@ -15,6 +15,12 @@
     <div class="col-md-4">
         <h1 class="mb-3">Registration</h1>
         <form method="post" th:action="@{/registration}" th:object="${userRegistrationRequest}">
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+                <input class="form-control" id="email" required th:field="*{email}" type="email"/>
+                <label class="form-label" for="email">Email address</label>
+            </div>
+
             <!-- Username input -->
             <div class="form-outline mb-4">
                 <input class="form-control" id="username" required th:field="*{username}" type="text"/>
@@ -25,12 +31,6 @@
             <div class="form-outline mb-4">
                 <input class="form-control" id="password" required th:field="*{password}" type="password"/>
                 <label class="form-label" for="password">Password</label>
-            </div>
-
-            <!-- Email input -->
-            <div class="form-outline mb-4">
-                <input class="form-control" id="email" required th:field="*{email}" type="email"/>
-                <label class="form-label" for="email">Email address</label>
             </div>
 
             <!-- Submit button -->
