@@ -12,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import static com.file.storage.model.Role.ROLE_USER;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -20,19 +22,15 @@ public class WebSecurityConfiguration {
     private final CustomUserDetailsService customUserDetailsService;
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/registration").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().hasAuthority(ROLE_USER.name())
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
+                        .loginProcessingUrl("/login")
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -41,6 +39,11 @@ public class WebSecurityConfiguration {
                 );
 
         return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
