@@ -18,3 +18,10 @@ logging:
 
 server:
   port: 8080
+
+minio:
+  client:
+    endpoint: http://127.0.0.1:9000
+    user: root
+    password: rootpassword
+  bucket-name: user-files
