@@ -24,8 +24,9 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public void register(@ModelAttribute("userRegistrationRequest") UserRegistrationRequest userRegistrationRequest) {
+    public String register(@ModelAttribute("userRegistrationRequest") UserRegistrationRequest userRegistrationRequest) {
         // TODO: Request validation
         userService.register(userRegistrationRequest);
+        return "redirect:/login";
     }
 }
