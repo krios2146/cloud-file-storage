@@ -1,6 +1,7 @@
 package com.file.storage.config;
 
 import com.file.storage.service.BucketService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +12,7 @@ import org.springframework.context.event.EventListener;
 @Configuration
 @RequiredArgsConstructor
 @Setter
+@Getter
 public class MinioBucketConfiguration {
 
     private final BucketService bucketService;

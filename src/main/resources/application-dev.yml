@@ -11,6 +11,10 @@ spring:
     properties:
       hibernate:
         dialect: "org.hibernate.dialect.PostgreSQLDialect"
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
 
 logging:
   level:
