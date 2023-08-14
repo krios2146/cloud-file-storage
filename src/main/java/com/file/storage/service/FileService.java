@@ -2,6 +2,9 @@ package com.file.storage.service;
 
 import com.file.storage.MinioHelper;
 import com.file.storage.config.MinioBucketConfiguration;
+import com.file.storage.dto.FileUploadRequest;
+import com.file.storage.dto.MinioObjectDto;
+import io.minio.ListObjectsArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.SnowballObject;
@@ -23,15 +26,16 @@ public class FileService {
     private final MinioBucketConfiguration minioBucketConfiguration;
     private final MinioHelper minioHelper;
 
-    public void uploadFile(MultipartFile file) {
+    public void uploadFile(FileUploadRequest fileUploadRequest) {
+        MultipartFile file = fileUploadRequest.getFile();
         try (InputStream stream = file.getInputStream()) {
             minioClient.putObject(PutObjectArgs.builder()
                     .stream(stream, file.getSize(), -1)
                     .bucket(minioBucketConfiguration.getBucketName())
-                    .object(minioHelper.getRootFolder() + file.getOriginalFilename())
+                    .object(minioHelper.getRootFolderForUser(fileUploadRequest.getOwner()) + file.getOriginalFilename())
                     .build());
-
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
