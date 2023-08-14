@@ -39,10 +39,10 @@ public class FileService {
         }
     }
 
-    public List<MinioObjectDto> getUserFiles(String username) {
+    public List<MinioObjectDto> getUserFiles(String username, String folder) {
         Iterable<Result<Item>> results = minioClient.listObjects(ListObjectsArgs.builder()
                 .bucket(minioBucketConfiguration.getBucketName())
-                .prefix(minioHelper.getRootFolderForUser(username))
+                .prefix(minioHelper.getRootFolderForUser(username) + folder)
                 .build());
 
         List<MinioObjectDto> files = new ArrayList<>();
