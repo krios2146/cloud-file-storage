@@ -7,13 +7,12 @@ import com.file.storage.dto.MinioObjectDto;
 import io.minio.ListObjectsArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
-import io.minio.SnowballObject;
-import io.minio.UploadSnowballObjectsArgs;
+import io.minio.Result;
+import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,33 +39,29 @@ public class FileService {
         }
     }
 
-    public void uploadFiles(List<MultipartFile> files) {
-        try {
-            List<SnowballObject> objects = convertToObjects(files);
+    public List<MinioObjectDto> getUserFiles(String username) {
+        Iterable<Result<Item>> results = minioClient.listObjects(ListObjectsArgs.builder()
+                .bucket(minioBucketConfiguration.getBucketName())
+                .prefix(minioHelper.getRootFolderForUser(username))
+                .build());
 
-            minioClient.uploadSnowballObjects(UploadSnowballObjectsArgs.builder()
-                    .bucket(minioBucketConfiguration.getBucketName())
-                    .objects(objects)
-                    .build());
+        List<MinioObjectDto> files = new ArrayList<>();
 
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+        results.forEach(result -> {
+            try {
+                Item item = result.get();
+                MinioObjectDto object = new MinioObjectDto(
+                        username,
+                        item.isDir(),
+                        item.objectName()
+                );
+                files.add(object);
+            }
+            catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
 
-    private List<SnowballObject> convertToObjects(List<MultipartFile> files) throws IOException {
-        List<SnowballObject> objects = new ArrayList<>();
-
-        for (MultipartFile file : files) {
-            SnowballObject snowballObject = new SnowballObject(
-                    minioHelper.getRootFolder() + file.getOriginalFilename(),
-                    file.getInputStream(),
-                    file.getSize(),
-                    null
-            );
-            objects.add(snowballObject);
-        }
-
-        return objects;
+        return files;
     }
 }
