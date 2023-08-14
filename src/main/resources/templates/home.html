@@ -10,6 +10,16 @@
 
 <h2 th:text="'Welcome ' + ${username}"></h2>
 
+<ul>
+    <li th:each="breadcrumb, iterStatus : ${breadcrumbs}">
+        <span th:with="breadcrumbPath=${(iterStatus.index > 0 ? breadcrumbPath + '/' : '') + breadcrumb}">
+            <a th:href="${'/?path=' + breadcrumbPath}">
+                <span th:text="${breadcrumb.isEmpty() ? username : breadcrumb}"></span>
+            </a>
+        </span>
+    </li>
+</ul>
+
 <h2>File upload</h2>
 <form method="post" th:action="@{/files}" th:object="${fileUploadRequest}">
     <input name="file" th:field="*{file}" type="file"/>
@@ -28,7 +38,7 @@
 
 <h2>Files</h2>
 <ol>
-    <li th:each="file : ${files}" th:text="${file}"></li>
+    <li th:each="file : ${files}" th:text="${file.name}"></li>
 </ol>
 
 </body>
