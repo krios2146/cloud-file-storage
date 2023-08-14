@@ -1,27 +1,23 @@
 package com.file.storage.controller;
 
-import com.file.storage.service.FileService;
+import com.file.storage.dto.FolderUploadRequest;
+import com.file.storage.service.FolderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-
-import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @Controller
 @RequestMapping("/folders")
 @RequiredArgsConstructor
 public class FolderController {
 
-    private final FileService fileService;
+    private final FolderService folderService;
 
-    @PostMapping(consumes = {MULTIPART_FORM_DATA_VALUE})
-    public String uploadFolder(@RequestParam("folder") List<MultipartFile> files) {
-        fileService.uploadFiles(files);
+    @PostMapping
+    public String uploadFolder(@ModelAttribute("folderUploadRequest") FolderUploadRequest folderUploadRequest) {
+        folderService.uploadFolder(folderUploadRequest);
         return "redirect:/";
     }
 }
