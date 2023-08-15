@@ -14,7 +14,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.file.storage.MinioRootFolderUtils.getRootFolderForUser;
+import static com.file.storage.MinioRootFolderUtils.getUserRootFolderPrefix;
 import static com.file.storage.MinioRootFolderUtils.removeUserRootFolderPrefix;
 
 @Service
@@ -30,7 +30,7 @@ public class FileService {
             minioClient.putObject(PutObjectArgs.builder()
                     .stream(stream, file.getSize(), -1)
                     .bucket(minioBucketConfiguration.getBucketName())
-                    .object(getRootFolderForUser(fileUploadRequest.getOwner()) + file.getOriginalFilename())
+                    .object(getUserRootFolderPrefix(fileUploadRequest.getOwner()) + file.getOriginalFilename())
                     .build());
         }
         catch (Exception e) {
@@ -41,7 +41,7 @@ public class FileService {
     public List<MinioObjectDto> getUserFiles(String username, String folder) {
         Iterable<Result<Item>> results = minioClient.listObjects(ListObjectsArgs.builder()
                 .bucket(minioBucketConfiguration.getBucketName())
-                .prefix(getRootFolderForUser(username) + folder)
+                .prefix(getUserRootFolderPrefix(username) + folder)
                 .build());
 
         List<MinioObjectDto> files = new ArrayList<>();
@@ -67,7 +67,7 @@ public class FileService {
         try {
             minioClient.removeObject(RemoveObjectArgs.builder()
                     .bucket(minioBucketConfiguration.getBucketName())
-                    .object(getRootFolderForUser(fileDeleteRequest.getOwner()) + fileDeleteRequest.getName())
+                    .object(getUserRootFolderPrefix(fileDeleteRequest.getOwner()) + fileDeleteRequest.getName())
                     .build());
         }
         catch (Exception e) {
