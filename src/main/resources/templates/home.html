@@ -50,7 +50,14 @@
                 <button type="submit">Delete</button>
             </form>
         </div>
-        <a th:href="@{'/?path=' + ${file.name}}" th:if="${file.isDir}" th:text="${file.name}"></a>
+        <div th:if="${file.isDir}">
+            <a th:href="@{'/?path=' + ${file.name}}" th:text="${file.name}"></a>
+            <form th:action="@{/folders}" th:method="delete" th:object="${folderDeleteRequest}">
+                <input th:name="name" th:value="${file.name}" type="hidden">
+                <input th:name="owner" th:value="${username}" type="hidden">
+                <button type="submit">Delete</button>
+            </form>
+        </div>
     </li>
 </ol>
 
