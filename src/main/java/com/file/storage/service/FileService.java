@@ -1,12 +1,10 @@
 package com.file.storage.service;
 
 import com.file.storage.config.MinioBucketConfiguration;
+import com.file.storage.dto.FileDeleteRequest;
 import com.file.storage.dto.FileUploadRequest;
 import com.file.storage.dto.MinioObjectDto;
-import io.minio.ListObjectsArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
-import io.minio.Result;
+import io.minio.*;
 import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -63,5 +61,17 @@ public class FileService {
         });
 
         return files;
+    }
+
+    public void deleteFile(FileDeleteRequest fileDeleteRequest) {
+        try {
+            minioClient.removeObject(RemoveObjectArgs.builder()
+                    .bucket(minioBucketConfiguration.getBucketName())
+                    .object(getRootFolderForUser(fileDeleteRequest.getOwner()) + fileDeleteRequest.getName())
+                    .build());
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
