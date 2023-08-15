@@ -11,12 +11,15 @@
 <h2 th:text="'Welcome ' + ${username}"></h2>
 
 <ul>
-    <li th:each="breadcrumb, iterStatus : ${breadcrumbs}">
-        <span th:with="breadcrumbPath=${(iterStatus.index > 0 ? breadcrumbPath + '/' : '') + breadcrumb}">
-            <a th:href="${'/?path=' + breadcrumbPath}">
-                <span th:text="${breadcrumb.isEmpty() ? username : breadcrumb}"></span>
-            </a>
-        </span>
+    <li>
+        <a th:href="@{/}">
+            <span th:text="${username}"></span>
+        </a>
+    </li>
+    <li th:each="link, iterStat : ${breadcrumbLinks}" th:if="${!#strings.isEmpty(link)}">
+        <a th:href="${'/?path=' + link}">
+            <span th:text="${breadcrumbFolders[iterStat.index]}"></span>
+        </a>
     </li>
 </ul>
 
@@ -38,7 +41,10 @@
 
 <h2>Files</h2>
 <ol>
-    <li th:each="file : ${files}" th:text="${file.name}"></li>
+    <li th:each="file : ${files}">
+        <span th:text="${file.name}" th:unless="${file.isDir}"></span>
+        <a th:href="@{'/?path=' + ${file.name}}" th:if="${file.isDir}" th:text="${file.name}"></a>
+    </li>
 </ol>
 
 </body>
