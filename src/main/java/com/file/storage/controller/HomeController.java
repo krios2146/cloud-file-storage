@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-import static com.file.storage.BreadcrumbsUtils.getBreadcrumbsForPath;
+import static com.file.storage.BreadcrumbsUtils.getBreadcrumbLinksForPath;
+import static com.file.storage.BreadcrumbsUtils.getFolderNamesForPath;
 
 @Controller
 @RequestMapping("/")
@@ -30,10 +31,11 @@ public class HomeController {
             @RequestParam(value = "path", required = false, defaultValue = "") String path,
             Model model) {
         // TODO: path validation
-        if (!path.isEmpty()) {
+        if (!path.isEmpty() && !path.endsWith("/")) {
             path += "/";
         }
-        model.addAttribute("breadcrumbs", getBreadcrumbsForPath(path));
+        model.addAttribute("breadcrumbLinks", getBreadcrumbLinksForPath(path));
+        model.addAttribute("breadcrumbFolders", getFolderNamesForPath(path));
         model.addAttribute("username", user.getUsername());
         model.addAttribute("fileUploadRequest", new FileUploadRequest());
         model.addAttribute("folderUploadRequest", new FolderUploadRequest());
