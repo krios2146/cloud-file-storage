@@ -1,6 +1,5 @@
 package com.file.storage.service;
 
-import com.file.storage.MinioHelper;
 import com.file.storage.config.MinioBucketConfiguration;
 import com.file.storage.dto.FileUploadRequest;
 import com.file.storage.dto.MinioObjectDto;
@@ -17,13 +16,15 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.file.storage.MinioRootFolderUtils.getRootFolderForUser;
+import static com.file.storage.MinioRootFolderUtils.removeUserRootFolderPrefix;
+
 @Service
 @RequiredArgsConstructor
 public class FileService {
 
     private final MinioClient minioClient;
     private final MinioBucketConfiguration minioBucketConfiguration;
-    private final MinioHelper minioHelper;
 
     public void uploadFile(FileUploadRequest fileUploadRequest) {
         MultipartFile file = fileUploadRequest.getFile();
@@ -31,7 +32,7 @@ public class FileService {
             minioClient.putObject(PutObjectArgs.builder()
                     .stream(stream, file.getSize(), -1)
                     .bucket(minioBucketConfiguration.getBucketName())
-                    .object(minioHelper.getRootFolderForUser(fileUploadRequest.getOwner()) + file.getOriginalFilename())
+                    .object(getRootFolderForUser(fileUploadRequest.getOwner()) + file.getOriginalFilename())
                     .build());
         }
         catch (Exception e) {
@@ -42,7 +43,7 @@ public class FileService {
     public List<MinioObjectDto> getUserFiles(String username, String folder) {
         Iterable<Result<Item>> results = minioClient.listObjects(ListObjectsArgs.builder()
                 .bucket(minioBucketConfiguration.getBucketName())
-                .prefix(minioHelper.getRootFolderForUser(username) + folder)
+                .prefix(getRootFolderForUser(username) + folder)
                 .build());
 
         List<MinioObjectDto> files = new ArrayList<>();
@@ -53,8 +54,7 @@ public class FileService {
                 MinioObjectDto object = new MinioObjectDto(
                         username,
                         item.isDir(),
-                        item.objectName()
-                );
+                        removeUserRootFolderPrefix(item.objectName(), username));
                 files.add(object);
             }
             catch (Exception e) {
