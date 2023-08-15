@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+
+<h1>Home</h1>
+
+<h2 th:text="'Welcome ' + ${username}"></h2>
+
+<ul>
+    <li>
+        <a th:href="@{/}">
+            <span th:text="${username}"></span>
+        </a>
+    </li>
+    <li th:each="link, iterStat : ${breadcrumbLinks}" th:if="${!#strings.isEmpty(link)}">
+        <a th:href="${'/?path=' + link}">
+            <span th:text="${breadcrumbFolders[iterStat.index]}"></span>
+        </a>
+    </li>
+</ul>
+
+<h2>File upload</h2>
+<form method="post" th:action="@{/files}" th:object="${fileUploadRequest}">
+    <input name="file" th:field="*{file}" type="file"/>
+    <input th:name="owner" th:value="${username}" type="hidden"/>
+    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+    <button formenctype="multipart/form-data" type="submit">Submit</button>
+</form>
+
+<h2>Folder upload</h2>
+<form method="post" th:action="@{/folders}" th:object="${folderUploadRequest}">
+    <input name="files" th:field="*{files}" type="file" webkitdirectory/>
+    <input th:name="owner" th:value="${username}" type="hidden"/>
+    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+    <button formenctype="multipart/form-data" type="submit">Submit</button>
+</form>
+
+<h2>Files</h2>
+<ol>
+    <li th:each="file : ${files}">
+        <span th:text="${file.name}" th:unless="${file.isDir}"></span>
+        <a th:href="@{'/?path=' + ${file.name}}" th:if="${file.isDir}" th:text="${file.name}"></a>
+    </li>
+</ol>
+
+</body>
+</html>
