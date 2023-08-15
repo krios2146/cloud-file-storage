@@ -1,5 +1,6 @@
 package com.file.storage.controller;
 
+import com.file.storage.dto.FileDeleteRequest;
 import com.file.storage.dto.FileUploadRequest;
 import com.file.storage.dto.FolderUploadRequest;
 import com.file.storage.dto.MinioObjectDto;
@@ -36,9 +37,12 @@ public class HomeController {
         }
         model.addAttribute("breadcrumbLinks", getBreadcrumbLinksForPath(path));
         model.addAttribute("breadcrumbFolders", getFolderNamesForPath(path));
+
         model.addAttribute("username", user.getUsername());
+
         model.addAttribute("fileUploadRequest", new FileUploadRequest());
         model.addAttribute("folderUploadRequest", new FolderUploadRequest());
+        model.addAttribute("fileDeleteRequest", new FileDeleteRequest());
 
         List<MinioObjectDto> userFiles = fileService.getUserFiles(user.getUsername(), path);
         model.addAttribute("files", userFiles);
