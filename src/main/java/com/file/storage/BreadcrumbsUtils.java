@@ -1,12 +1,9 @@
 package com.file.storage;
 
-import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Component
 public class BreadcrumbsUtils {
 
     public static List<String> getBreadcrumbLinksForPath(String path) {
