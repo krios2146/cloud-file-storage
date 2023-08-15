@@ -1,6 +1,5 @@
 package com.file.storage.service;
 
-import com.file.storage.MinioHelper;
 import com.file.storage.config.MinioBucketConfiguration;
 import com.file.storage.dto.FolderUploadRequest;
 import io.minio.MinioClient;
@@ -14,13 +13,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.file.storage.MinioRootFolderUtils.getRootFolderForUser;
+
 @Service
 @RequiredArgsConstructor
 public class FolderService {
 
     private final MinioClient minioClient;
     private final MinioBucketConfiguration minioBucketConfiguration;
-    private final MinioHelper minioHelper;
 
     public void uploadFolder(FolderUploadRequest folderUploadRequest) {
         List<MultipartFile> files = folderUploadRequest.getFiles();
@@ -43,7 +43,7 @@ public class FolderService {
 
         for (MultipartFile file : files) {
             SnowballObject snowballObject = new SnowballObject(
-                    minioHelper.getRootFolderForUser(owner) + file.getOriginalFilename(),
+                    getRootFolderForUser(owner) + file.getOriginalFilename(),
                     file.getInputStream(),
                     file.getSize(),
                     null
