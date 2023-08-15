@@ -1,8 +1,6 @@
 package com.file.storage.controller;
 
-import com.file.storage.dto.FileUploadRequest;
-import com.file.storage.dto.FolderUploadRequest;
-import com.file.storage.dto.MinioObjectDto;
+import com.file.storage.dto.*;
 import com.file.storage.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -36,12 +34,17 @@ public class HomeController {
         }
         model.addAttribute("breadcrumbLinks", getBreadcrumbLinksForPath(path));
         model.addAttribute("breadcrumbFolders", getFolderNamesForPath(path));
+
         model.addAttribute("username", user.getUsername());
+
         model.addAttribute("fileUploadRequest", new FileUploadRequest());
         model.addAttribute("folderUploadRequest", new FolderUploadRequest());
+        model.addAttribute("fileDeleteRequest", new FileDeleteRequest());
+        model.addAttribute("folderDeleteRequest", new FolderDeleteRequest());
 
         List<MinioObjectDto> userFiles = fileService.getUserFiles(user.getUsername(), path);
         model.addAttribute("files", userFiles);
+
         return "home";
     }
 }
