@@ -24,6 +24,11 @@ public class BreadcrumbsUtils {
 
         return links;
     }
+
+    public static List<String> getFolderNamesForPath(String path) {
+        if (path.isEmpty()) {
+            return List.of(path);
+        }
         return Arrays.stream(path.split("/")).toList();
     }
 }
