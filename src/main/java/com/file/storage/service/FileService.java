@@ -26,30 +26,11 @@ public class FileService {
     private final MinioBucketConfiguration minioBucketConfiguration;
 
     public List<MinioObjectDto> getUserFiles(String username, String folder) {
-        Iterable<Result<Item>> results = minioClient.listObjects(ListObjectsArgs.builder()
-                .bucket(minioBucketConfiguration.getBucketName())
-                .prefix(getUserRootFolderPrefix(username) + folder)
-                .build());
+        return getUserFiles(username, folder, false);
+    }
 
-        List<MinioObjectDto> files = new ArrayList<>();
-
-        results.forEach(result -> {
-            try {
-                Item item = result.get();
-                MinioObjectDto object = new MinioObjectDto(
-                        username,
-                        item.isDir(),
-                        removeUserRootFolderPrefix(item.objectName(), username),
-                        getFileNameFromPath(item.objectName())
-                );
-                files.add(object);
-            }
-            catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        return files;
+    public List<MinioObjectDto> getAllUserFiles(String username, String folder) {
+        return getUserFiles(username, folder, true);
     }
 
     public void uploadFile(FileUploadRequest fileUploadRequest) {
@@ -101,6 +82,34 @@ public class FileService {
         catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private List<MinioObjectDto> getUserFiles(String username, String folder, boolean isRecursive) {
+        Iterable<Result<Item>> results = minioClient.listObjects(ListObjectsArgs.builder()
+                .bucket(minioBucketConfiguration.getBucketName())
+                .prefix(getUserRootFolderPrefix(username) + folder)
+                .recursive(isRecursive)
+                .build());
+
+        List<MinioObjectDto> files = new ArrayList<>();
+
+        results.forEach(result -> {
+            try {
+                Item item = result.get();
+                MinioObjectDto object = new MinioObjectDto(
+                        username,
+                        item.isDir(),
+                        removeUserRootFolderPrefix(item.objectName(), username),
+                        getFileNameFromPath(item.objectName())
+                );
+                files.add(object);
+            }
+            catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        return files;
     }
 
     private static String getFileNameFromPath(String path) {
