@@ -2,14 +2,18 @@ package com.file.storage.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class FolderDeleteRequest {
+public class FolderRenameRequest {
+
+    private String currentName;
+
+    private String newName;
 
     private String path;
 

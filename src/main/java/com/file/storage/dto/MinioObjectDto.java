@@ -15,5 +15,7 @@ public class MinioObjectDto {
 
     private Boolean isDir;
 
+    private String path;
+
     private String name;
 }

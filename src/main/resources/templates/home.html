@@ -45,17 +45,31 @@
         <div th:unless="${file.isDir}">
             <span th:text="${file.name}"></span>
             <form th:action="@{/files}" th:method="delete" th:object="${fileDeleteRequest}">
-                <input th:name="name" th:value="${file.name}" type="hidden">
+                <input th:name="path" th:value="${file.path}" type="hidden">
                 <input th:name="owner" th:value="${username}" type="hidden">
                 <button type="submit">Delete</button>
             </form>
+            <form th:action="@{/files}" th:method="put" th:object="${fileRenameRequest}">
+                <input th:name="currentName" th:value="${file.name}" type="hidden">
+                <input required th:field="*{newName}" type="text">
+                <input th:name="path" th:value="${file.path}" type="hidden">
+                <input th:name="owner" th:value="${username}" type="hidden">
+                <button type="submit">Rename</button>
+            </form>
         </div>
         <div th:if="${file.isDir}">
-            <a th:href="@{'/?path=' + ${file.name}}" th:text="${file.name}"></a>
+            <a th:href="@{'/?path=' + ${file.path}}" th:text="${file.name}"></a>
             <form th:action="@{/folders}" th:method="delete" th:object="${folderDeleteRequest}">
-                <input th:name="name" th:value="${file.name}" type="hidden">
+                <input th:name="path" th:value="${file.path}" type="hidden">
                 <input th:name="owner" th:value="${username}" type="hidden">
                 <button type="submit">Delete</button>
+            </form>
+            <form th:action="@{/folders}" th:method="put" th:object="${folderRenameRequest}">
+                <input th:name="currentName" th:value="${file.name}" type="hidden">
+                <input required th:field="*{newName}" type="text">
+                <input th:name="path" th:value="${file.path}" type="hidden">
+                <input th:name="owner" th:value="${username}" type="hidden">
+                <button type="submit">Rename</button>
             </form>
         </div>
     </li>

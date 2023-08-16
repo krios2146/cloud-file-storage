@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class FileDeleteRequest {
 
-    private String name;
+    private String path;
 
     private String owner;
 }

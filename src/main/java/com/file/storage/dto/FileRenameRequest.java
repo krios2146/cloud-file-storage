@@ -9,7 +9,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class FolderDeleteRequest {
+public class FileRenameRequest {
+
+    private String currentName;
+
+    private String newName;
 
     private String path;
 
