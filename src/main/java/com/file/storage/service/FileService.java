@@ -52,7 +52,9 @@ public class FileService {
                 MinioObjectDto object = new MinioObjectDto(
                         username,
                         item.isDir(),
-                        removeUserRootFolderPrefix(item.objectName(), username));
+                        removeUserRootFolderPrefix(item.objectName(), username),
+                        getFileNameFromPath(item.objectName())
+                );
                 files.add(object);
             }
             catch (Exception e) {
@@ -73,5 +75,18 @@ public class FileService {
         catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static String getFileNameFromPath(String path) {
+        if (!path.contains("/")) {
+            return path;
+        }
+        if (path.endsWith("/")) {
+            path = path.substring(0, path.length() - 1);
+        }
+        if (path.lastIndexOf('/') > 0) {
+            return path.substring(path.lastIndexOf('/') + 1);
+        }
+        return path;
     }
 }
