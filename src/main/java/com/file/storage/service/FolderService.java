@@ -2,6 +2,7 @@ package com.file.storage.service;
 
 import com.file.storage.config.MinioBucketConfiguration;
 import com.file.storage.dto.FolderDeleteRequest;
+import com.file.storage.dto.FolderRenameRequest;
 import com.file.storage.dto.FolderUploadRequest;
 import com.file.storage.dto.MinioObjectDto;
 import io.minio.*;
@@ -41,8 +42,34 @@ public class FolderService {
         }
     }
 
+    public void renameFolder(FolderRenameRequest folderRenameRequest) {
+        List<MinioObjectDto> files = fileService.getAllUserFiles(folderRenameRequest.getOwner(), folderRenameRequest.getPath());
+
+        for (MinioObjectDto file : files) {
+            try {
+                minioClient.copyObject(CopyObjectArgs.builder()
+                        .bucket(minioBucketConfiguration.getBucketName())
+                        .object(getPathWithNewFolder(
+                                getUserRootFolderPrefix(file.getOwner()) + file.getPath(),
+                                folderRenameRequest.getCurrentName(),
+                                folderRenameRequest.getNewName()
+                        ))
+                        .source(CopySource.builder()
+                                .bucket(minioBucketConfiguration.getBucketName())
+                                .object(getUserRootFolderPrefix(file.getOwner()) + file.getPath())
+                                .build())
+                        .build());
+            }
+            catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        deleteFolder(new FolderDeleteRequest(folderRenameRequest.getPath(), folderRenameRequest.getOwner()));
+    }
+
     public void deleteFolder(FolderDeleteRequest folderDeleteRequest) {
-        List<MinioObjectDto> files = fileService.getUserFiles(folderDeleteRequest.getOwner(), folderDeleteRequest.getName());
+        List<MinioObjectDto> files = fileService.getAllUserFiles(folderDeleteRequest.getOwner(), folderDeleteRequest.getName());
 
         List<DeleteObject> objects = convertToDeleteObjects(files);
 
@@ -92,5 +119,11 @@ public class FolderService {
         }
 
         return objects;
+    }
+
+    private static String getPathWithNewFolder(String path, String oldName, String newName) {
+        oldName = "/" + oldName + "/";
+        newName = "/" + newName + "/";
+        return path.replace(oldName, newName);
     }
 }
