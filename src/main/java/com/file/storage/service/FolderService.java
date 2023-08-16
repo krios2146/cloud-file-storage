@@ -69,7 +69,7 @@ public class FolderService {
     }
 
     public void deleteFolder(FolderDeleteRequest folderDeleteRequest) {
-        List<MinioObjectDto> files = fileService.getAllUserFiles(folderDeleteRequest.getOwner(), folderDeleteRequest.getName());
+        List<MinioObjectDto> files = fileService.getAllUserFiles(folderDeleteRequest.getOwner(), folderDeleteRequest.getPath());
 
         List<DeleteObject> objects = convertToDeleteObjects(files);
 
@@ -93,13 +93,7 @@ public class FolderService {
         List<DeleteObject> objects = new ArrayList<>();
 
         for (MinioObjectDto file : files) {
-            if (file.getIsDir()) {
-                List<MinioObjectDto> filesInNestedFolder = fileService.getUserFiles(file.getOwner(), file.getPath());
-                List<DeleteObject> objectsInNestedFolder = convertToDeleteObjects(filesInNestedFolder);
-                objects.addAll(objectsInNestedFolder);
-            } else {
-                objects.add(new DeleteObject(getUserRootFolderPrefix(file.getOwner()) + file.getPath()));
-            }
+            objects.add(new DeleteObject(getUserRootFolderPrefix(file.getOwner()) + file.getPath()));
         }
 
         return objects;

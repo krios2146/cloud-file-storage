@@ -76,7 +76,7 @@ public class FileService {
         try {
             minioClient.removeObject(RemoveObjectArgs.builder()
                     .bucket(minioBucketConfiguration.getBucketName())
-                    .object(getUserRootFolderPrefix(fileDeleteRequest.getOwner()) + fileDeleteRequest.getName())
+                    .object(getUserRootFolderPrefix(fileDeleteRequest.getOwner()) + fileDeleteRequest.getPath())
                     .build());
         }
         catch (Exception e) {
