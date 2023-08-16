@@ -24,20 +24,6 @@ public class FileService {
     private final MinioClient minioClient;
     private final MinioBucketConfiguration minioBucketConfiguration;
 
-    public void uploadFile(FileUploadRequest fileUploadRequest) {
-        MultipartFile file = fileUploadRequest.getFile();
-        try (InputStream stream = file.getInputStream()) {
-            minioClient.putObject(PutObjectArgs.builder()
-                    .stream(stream, file.getSize(), -1)
-                    .bucket(minioBucketConfiguration.getBucketName())
-                    .object(getUserRootFolderPrefix(fileUploadRequest.getOwner()) + file.getOriginalFilename())
-                    .build());
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public List<MinioObjectDto> getUserFiles(String username, String folder) {
         Iterable<Result<Item>> results = minioClient.listObjects(ListObjectsArgs.builder()
                 .bucket(minioBucketConfiguration.getBucketName())
@@ -63,6 +49,45 @@ public class FileService {
         });
 
         return files;
+    }
+
+    public void uploadFile(FileUploadRequest fileUploadRequest) {
+        MultipartFile file = fileUploadRequest.getFile();
+        try (InputStream stream = file.getInputStream()) {
+            minioClient.putObject(PutObjectArgs.builder()
+                    .stream(stream, file.getSize(), -1)
+                    .bucket(minioBucketConfiguration.getBucketName())
+                    .object(getUserRootFolderPrefix(fileUploadRequest.getOwner()) + file.getOriginalFilename())
+                    .build());
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void renameFile(FileRenameRequest fileRenameRequest) {
+        try {
+            minioClient.copyObject(CopyObjectArgs.builder()
+                    .bucket(minioBucketConfiguration.getBucketName())
+                    .object(getPathWithNewName(
+                            (getUserRootFolderPrefix(fileRenameRequest.getOwner()) + fileRenameRequest.getPath()),
+                            fileRenameRequest.getCurrentName(),
+                            fileRenameRequest.getNewName())
+                    )
+                    .source(CopySource.builder()
+                            .bucket(minioBucketConfiguration.getBucketName())
+                            .object(getUserRootFolderPrefix(fileRenameRequest.getOwner()) + fileRenameRequest.getPath())
+                            .build())
+                    .build());
+
+            deleteFile(new FileDeleteRequest(
+                    fileRenameRequest.getPath(),
+                    fileRenameRequest.getOwner())
+            );
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void deleteFile(FileDeleteRequest fileDeleteRequest) {
