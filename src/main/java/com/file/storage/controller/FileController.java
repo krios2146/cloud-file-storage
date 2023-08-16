@@ -1,14 +1,12 @@
 package com.file.storage.controller;
 
 import com.file.storage.dto.FileDeleteRequest;
+import com.file.storage.dto.FileRenameRequest;
 import com.file.storage.dto.FileUploadRequest;
 import com.file.storage.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/files")
@@ -20,6 +18,12 @@ public class FileController {
     @PostMapping
     public String uploadFile(@ModelAttribute("fileUploadRequest") FileUploadRequest fileUploadRequest) {
         fileService.uploadFile(fileUploadRequest);
+        return "redirect:/";
+    }
+
+    @PutMapping
+    public String renameFile(@ModelAttribute("fileRenameRequest") FileRenameRequest fileRenameRequest) {
+        fileService.renameFile(fileRenameRequest);
         return "redirect:/";
     }
 
