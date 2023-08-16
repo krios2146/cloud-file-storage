@@ -2,6 +2,7 @@ package com.file.storage.service;
 
 import com.file.storage.config.MinioBucketConfiguration;
 import com.file.storage.dto.FileDeleteRequest;
+import com.file.storage.dto.FileRenameRequest;
 import com.file.storage.dto.FileUploadRequest;
 import com.file.storage.dto.MinioObjectDto;
 import io.minio.*;
@@ -113,5 +114,9 @@ public class FileService {
             return path.substring(path.lastIndexOf('/') + 1);
         }
         return path;
+    }
+
+    private static String getPathWithNewName(String path, String oldName, String newName) {
+        return path.replace(oldName, newName);
     }
 }
