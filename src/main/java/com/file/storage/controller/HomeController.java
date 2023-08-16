@@ -41,7 +41,8 @@ public class HomeController {
         model.addAttribute("folderUploadRequest", new FolderUploadRequest());
         model.addAttribute("fileDeleteRequest", new FileDeleteRequest());
         model.addAttribute("folderDeleteRequest", new FolderDeleteRequest());
-        model.addAttribute(("fileRenameRequest"), new FileRenameRequest());
+        model.addAttribute("fileRenameRequest", new FileRenameRequest());
+        model.addAttribute("folderRenameRequest", new FileRenameRequest());
 
         List<MinioObjectDto> userFiles = fileService.getUserFiles(user.getUsername(), path);
         model.addAttribute("files", userFiles);
