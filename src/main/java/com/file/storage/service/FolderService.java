@@ -67,11 +67,11 @@ public class FolderService {
 
         for (MinioObjectDto file : files) {
             if (file.getIsDir()) {
-                List<MinioObjectDto> filesInNestedFolder = fileService.getUserFiles(file.getOwner(), file.getName());
+                List<MinioObjectDto> filesInNestedFolder = fileService.getUserFiles(file.getOwner(), file.getPath());
                 List<DeleteObject> objectsInNestedFolder = convertToDeleteObjects(filesInNestedFolder);
                 objects.addAll(objectsInNestedFolder);
             } else {
-                objects.add(new DeleteObject(getUserRootFolderPrefix(file.getOwner()) + file.getName()));
+                objects.add(new DeleteObject(getUserRootFolderPrefix(file.getOwner()) + file.getPath()));
             }
         }
 
