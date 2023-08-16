@@ -49,6 +49,13 @@
                 <input th:name="owner" th:value="${username}" type="hidden">
                 <button type="submit">Delete</button>
             </form>
+            <form th:action="@{/files}" th:method="put" th:object="${fileRenameRequest}">
+                <input th:name="currentName" th:value="${file.name}" type="hidden">
+                <input id="newName" required th:field="*{newName}" type="text">
+                <input th:name="path" th:value="${file.path}" type="hidden">
+                <input th:name="owner" th:value="${username}" type="hidden">
+                <button type="submit">Rename</button>
+            </form>
         </div>
         <div th:if="${file.isDir}">
             <a th:href="@{'/?path=' + ${file.path}}" th:text="${file.name}"></a>
