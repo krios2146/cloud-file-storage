@@ -1,13 +1,11 @@
 package com.file.storage.service;
 
 import com.file.storage.config.MinioBucketConfiguration;
-import com.file.storage.dto.FileDeleteRequest;
-import com.file.storage.dto.FileRenameRequest;
-import com.file.storage.dto.FileUploadRequest;
-import com.file.storage.dto.MinioObjectDto;
+import com.file.storage.dto.*;
 import io.minio.*;
 import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,6 +29,19 @@ public class FileService {
 
     public List<MinioObjectDto> getAllUserFiles(String username, String folder) {
         return getUserFiles(username, folder, true);
+    }
+
+    public ByteArrayResource downloadFile(FileDownloadRequest fileDownloadRequest) {
+        GetObjectArgs getObjectArgs = GetObjectArgs.builder()
+                .bucket(minioBucketConfiguration.getBucketName())
+                .object(getUserRootFolderPrefix(fileDownloadRequest.getOwner()) + fileDownloadRequest.getPath())
+                .build();
+        try (GetObjectResponse object = minioClient.getObject(getObjectArgs)) {
+            return new ByteArrayResource(object.readAllBytes());
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void uploadFile(FileUploadRequest fileUploadRequest) {
