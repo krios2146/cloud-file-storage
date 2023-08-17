@@ -81,5 +81,11 @@
     </li>
 </ol>
 
+
+<h2>Search</h2>
+<form th:action="@{/search}" th:method="get">
+    <input required th:name="query" type="text">
+    <button type="submit">Search</button>
+</form>
 </body>
 </html>
