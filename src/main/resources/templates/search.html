@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search</title>
+</head>
+<body>
+<ul>
+    <li th:each="result : ${searchResults}">
+        <span th:text="|path to obj = ${result.path}|"></span>
+        <span th:text="|name = ${result.name}|"></span>
+        <span th:text="|is obj directory = ${result.isDir}|"></span>
+    </li>
+</ul>
+</body>
+</html>
