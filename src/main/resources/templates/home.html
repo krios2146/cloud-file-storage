@@ -56,6 +56,12 @@
                 <input th:name="owner" th:value="${username}" type="hidden">
                 <button type="submit">Rename</button>
             </form>
+            <form th:action="@{/files}" th:method="get" th:object="${fileDownloadRequest}">
+                <input th:name="path" th:value="${file.path}" type="hidden">
+                <input th:name="owner" th:value="${username}" type="hidden">
+                <input th:name="name" th:value="${file.name}" type="hidden">
+                <button type="submit">Download</button>
+            </form>
         </div>
         <div th:if="${file.isDir}">
             <a th:href="@{'/?path=' + ${file.path}}" th:text="${file.name}"></a>
