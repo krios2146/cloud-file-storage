@@ -35,17 +35,20 @@ public class HomeController {
         model.addAttribute("breadcrumbLinks", getBreadcrumbLinksForPath(path));
         model.addAttribute("breadcrumbFolders", getFolderNamesForPath(path));
 
-        model.addAttribute("username", user.getUsername());
-
         model.addAttribute("fileUploadRequest", new FileUploadRequest());
         model.addAttribute("folderUploadRequest", new FolderUploadRequest());
+
         model.addAttribute("fileDeleteRequest", new FileDeleteRequest());
         model.addAttribute("folderDeleteRequest", new FolderDeleteRequest());
+
         model.addAttribute("fileRenameRequest", new FileRenameRequest());
         model.addAttribute("folderRenameRequest", new FileRenameRequest());
 
-        List<MinioObjectDto> userFiles = fileService.getUserFiles(user.getUsername(), path);
-        model.addAttribute("files", userFiles);
+        if (user != null) {
+            List<MinioObjectDto> userFiles = fileService.getUserFiles(user.getUsername(), path);
+            model.addAttribute("files", userFiles);
+            model.addAttribute("username", user.getUsername());
+        }
 
         return "home";
     }
