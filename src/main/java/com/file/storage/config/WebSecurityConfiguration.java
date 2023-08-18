@@ -25,17 +25,15 @@ public class WebSecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/registration").permitAll()
-                        .anyRequest().hasAuthority(ROLE_USER.name())
+                        .requestMatchers("/files", "/folders", "/search").hasAuthority(ROLE_USER.name())
+                        .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-                        .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                        .permitAll()
                 );
 
         return http.build();
