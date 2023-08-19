@@ -86,9 +86,8 @@
                     <div th:if="${files}">
                         <h6 class="mb-3">Folders</h6>
                         <div class="row row-cols-1 row-cols-md-5 g-4">
-                            <div class="col" th:each="file : ${files}" th:if="${file.isDir}">
-                                <div
-                                        class="card flex-row p-2 align-items-center justify-content-between shadow-4-strong">
+                            <div class="col" th:each="file, iterStat : ${files}" th:if="${file.isDir}">
+                                <div class="card flex-row p-2 align-items-center justify-content-between shadow-4-strong">
 
                                     <!-- Folder Name -->
                                     <div class="d-flex align-items-center w-75 position-relative">
@@ -111,8 +110,8 @@
                                                 <!-- Folder Rename -->
                                                 <li>
                                                     <button class="dropdown-item"
-                                                            data-mdb-target="#folderRenameModal"
-                                                            data-mdb-toggle="modal">
+                                                            data-mdb-toggle="modal"
+                                                            th:attr="data-mdb-target=|#folder-rename-modal-${iterStat.index}|">
                                                         Rename
                                                     </button>
                                                 </li>
