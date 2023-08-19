@@ -36,6 +36,7 @@
         <!-- Right Pane -->
         <div class="col-md-9">
 
+            <!-- Outer container -->
             <div class="container-fluid d-flex flex-column">
 
                 <!-- Search -->
@@ -49,10 +50,11 @@
                     </button>
                 </form>
 
+                <!-- Inner container -->
                 <div class="container-fluid d-flex flex-column rounded-4 bg-light py-3 px-4" style="min-height: 50vh;">
 
                     <!-- Breadcrumbs -->
-                    <nav aria-label="breadcrumb" th:if="${username}">
+                    <nav aria-label="breadcrumb" class="mb-4" th:if="${username}">
                         <ol class="breadcrumb fs-4">
                             <li class="breadcrumb-item">
                                 <a th:class="${breadcrumbLinks == null ? 'breadcrumb-item active' : ''}"
@@ -77,19 +79,97 @@
                         </p>
                     </div>
 
+                    <!-- Folders -->
+                    <div th:if="${files}">
+                        <h6 class="mb-3">Folders</h6>
+                        <div class="row row-cols-1 row-cols-md-5 g-4">
+                            <div class="col" th:each="file : ${files}" th:if="${file.isDir}">
+                                <div class="card flex-row p-2 align-items-center justify-content-between shadow-4-strong">
+
+                                    <!-- Folder Name -->
+                                    <div class="d-flex align-items-center w-75 position-relative">
+                                        <img alt="folder" style="width: 2rem" th:src="@{/img/folder.png}"/>
+                                        <span class="ms-2 d-block text-truncate" th:text="${file.name}"></span>
+                                        <a class="stretched-link" th:href="@{'/?path=' + ${file.path}}"></a>
+                                    </div>
+
+                                    <!-- Folder Actions -->
+                                    <div>
+                                        <div class="dropdown">
+                                            <button aria-expanded="false" class="bg-white"
+                                                    data-mdb-toggle="dropdown" id="folderDropdown"
+                                                    style="border: none; width: 2.5rem; :after" type="button">
+                                                <img class="w-50" th:src="@{/img/more.png}"/>
+                                            </button>
+
+                                            <ul aria-labelledby="folderDropdown" class="dropdown-menu">
+
+                                                <!-- Folder Rename -->
+                                                <li>
+                                                    <button class="dropdown-item" data-mdb-target="#folderRenameModal"
+                                                            data-mdb-toggle="modal">
+                                                        Rename
+                                                    </button>
+                                                </li>
+
+                                                <!-- Folder Delete -->
+                                                <li>
+                                                    <form th:action="@{/folders}" th:method="delete"
+                                                          th:object="${folderDeleteRequest}">
+                                                        <input th:name="path" th:value="${file.path}" type="hidden">
+                                                        <input th:name="owner" th:value="${username}" type="hidden">
+                                                        <button class="dropdown-item" type="submit">Delete</button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Folder Rename Modal -->
+                                <div th:replace="component/rename-folder-modal :: folder-modal"></div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Files -->
+                    <div class="mt-5" th:if="${files}">
+                        <h6 class="mb-3">Files</h6>
+                        <div class="row row-cols-1 row-cols-md-5 g-4">
+                            <div class="col" th:each="file : ${files}">
+                                <div class="card flex-row p-2 align-items-center justify-content-between shadow-4-strong">
+                                    <div class="d-flex align-items-center w-75">
+                                        <img alt="file" style="width: 2rem" th:src="@{/img/file.png}"/>
+                                        <span class="ms-2 d-block text-truncate">Filenameasdasdasdasdasdasdasdasdasd.txt</span>
+                                    </div>
+                                    <div>
+                                        <div class="dropdown">
+                                            <button aria-expanded="false" class="bg-white"
+                                                    data-mdb-toggle="dropdown" id="fileDropdown"
+                                                    style="border: none; width: 2.5rem; :after" type="button">
+                                                <img class="w-50" th:src="@{/img/more.png}"/>
+                                            </button>
+                                            <ul aria-labelledby="fileDropdown" class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-
             </div>
-
-
         </div>
     </div>
 </div>
 
-
-<h2>Files</h2>
-<ol th:if="${username}">
-    <li th:each="file : ${files}">
+<ol>
+    <li>
         <div th:unless="${file.isDir}">
             <span th:text="${file.name}"></span>
             <form th:action="@{/files}" th:method="delete" th:object="${fileDeleteRequest}">
@@ -109,21 +189,6 @@
                 <input th:name="owner" th:value="${username}" type="hidden">
                 <input th:name="name" th:value="${file.name}" type="hidden">
                 <button type="submit">Download</button>
-            </form>
-        </div>
-        <div th:if="${file.isDir}">
-            <a th:href="@{'/?path=' + ${file.path}}" th:text="${file.name}"></a>
-            <form th:action="@{/folders}" th:method="delete" th:object="${folderDeleteRequest}">
-                <input th:name="path" th:value="${file.path}" type="hidden">
-                <input th:name="owner" th:value="${username}" type="hidden">
-                <button type="submit">Delete</button>
-            </form>
-            <form th:action="@{/folders}" th:method="put" th:object="${folderRenameRequest}">
-                <input th:name="currentName" th:value="${file.name}" type="hidden">
-                <input required th:field="*{newName}" type="text">
-                <input th:name="path" th:value="${file.path}" type="hidden">
-                <input th:name="owner" th:value="${username}" type="hidden">
-                <button type="submit">Rename</button>
             </form>
         </div>
     </li>
