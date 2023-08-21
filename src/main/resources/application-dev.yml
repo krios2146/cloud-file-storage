@@ -19,6 +19,9 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+  redis:
+    host: localhost
+    port: 6379
 
 logging:
   level:
