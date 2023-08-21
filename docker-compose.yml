@@ -11,6 +11,19 @@ services:
       - POSTGRES_PASSWORD=password
     ports:
       - "5432:5432"
+  redis:
+    image: redis:latest
+    command: redis-server
+    volumes:
+      - ~/data/redis:/var/lib/redis
+      - ~/data/redis/config:/usr/local/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      interval: 1s
+      timeout: 3s
+      retries: 5
 
   minio:
     image: quay.io/minio/minio
