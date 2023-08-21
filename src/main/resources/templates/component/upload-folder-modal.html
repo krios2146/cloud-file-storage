@@ -9,8 +9,8 @@
             <div class="modal-body">
                 <form enctype="multipart/form-data" id="folderUploadForm" method="post" th:action="@{/folders}"
                       th:object="${folderUploadRequest}">
-                    <input class="fileUpload" placeholder="Select Folder" th:field="*{files}" type="file"
-                           webkitdirectory/>
+                    <label class="form-label" for="folderUploadInput">Select folder</label>
+                    <input class="form-control" id="folderUploadInput" th:name="files" type="file" webkitdirectory/>
                     <input th:name="owner" th:value="${username}" type="hidden"/>
                 </form>
             </div>

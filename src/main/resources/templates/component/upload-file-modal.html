@@ -9,7 +9,8 @@
             <div class="modal-body">
                 <form enctype="multipart/form-data" id="fileUploadForm" method="post" th:action="@{/files}"
                       th:object="${fileUploadRequest}">
-                    <input class="fileUpload" placeholder="Select File" th:field="*{file}" type="file"/>
+                    <label class="form-label" for="fileUploadInput">Select file</label>
+                    <input class="form-control" id="fileUploadInput" th:name="file" type="file"/>
                     <input th:name="owner" th:value="${username}" type="hidden"/>
                 </form>
             </div>
