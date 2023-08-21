@@ -73,7 +73,7 @@
                     <!-- Not Authorized Message -->
                     <div class="my-auto d-flex flex-column justify-content-center align-items-center"
                          th:unless="${username}">
-                        <img class="w-25" th:src="@{/img/not-authorized.png}">
+                        <img class="w-25" th:src="@{/img/error.png}">
                         <p class="lead">
                             You are not logged in, please <a class="fw-normal" th:href="@{login}">login</a> to see
                             your
@@ -128,7 +128,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                /
 
                                 <!-- Folder Rename Modal -->
                                 <div th:replace="component/rename-folder-modal :: folder-modal"></div>
