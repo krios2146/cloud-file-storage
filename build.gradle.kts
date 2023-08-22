@@ -1,3 +1,5 @@
+import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
+
 plugins {
     java
     id("org.springframework.boot") version "3.1.0"
@@ -5,11 +7,23 @@ plugins {
 }
 
 group = "com.cloud.file"
-version = "0.0.1"
+version = "1.0.0"
 
 configurations {
     compileOnly {
         extendsFrom(configurations.annotationProcessor.get())
+    }
+}
+
+tasks.named<BootBuildImage>("bootBuildImage") {
+    environment.set(System.getenv())
+    imageName.set("krios2146/" + project.name)
+    publish.set(true)
+    docker {
+        publishRegistry {
+            username.set(environment.get()["DOCKER_REGISTRY_USERNAME"])
+            password.set(environment.get()["DOCKER_REGISTRY_PASSWORD"])
+        }
     }
 }
 
