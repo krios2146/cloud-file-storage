@@ -1,16 +1,19 @@
 spring:
   datasource:
-    username: java
-    password: java
-    url: jdbc:postgresql://localhost:5432/cloud-file-storage
+    username: ${SPRING_DB_USER}
+    password: ${SPRING_DB_PASSWORD}
+    url: ${SPRING_DB_URL}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create-drop
-    show-sql: true
+      ddl-auto: update
     properties:
       hibernate:
         dialect: "org.hibernate.dialect.PostgreSQLDialect"
+  data:
+    redis:
+      host: ${SPRING_REDIS_HOST}
+      port: ${SPRING_REDIS_PORT}
   servlet:
     multipart:
       max-file-size: 500MB
@@ -19,20 +22,10 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
-  redis:
-    host: localhost
-    port: 6379
-
-logging:
-  level:
-    org.springframework: trace
-
-server:
-  port: 8080
 
 minio:
   client:
-    endpoint: http://127.0.0.1:9000
-    user: root
-    password: rootpassword
+    endpoint: ${MINIO_CLIENT_ENDPOINT}
+    user: ${MINIO_CLIENT_USER}
+    password: ${MINIO_CLIENT_PASSWORD}
   bucket-name: user-files
