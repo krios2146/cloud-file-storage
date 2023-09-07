@@ -1,4 +1,4 @@
-package com.file.storage.dto;
+package com.file.storage.dto.request.file;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
