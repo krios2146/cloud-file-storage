@@ -2,20 +2,25 @@ package com.file.storage.dto.request.file;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@RequiredArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-public class FileRenameRequest {
+public class FileRenameRequest extends FileRequest {
 
     private String currentName;
 
     private String newName;
 
     private String path;
-
-    private String owner;
+     
+    public FileRenameRequest(String owner, String currentName, String newName, String path) {
+        super(owner);
+        this.currentName = currentName;
+        this.newName = newName;
+        this.path = path;
+    }
 }

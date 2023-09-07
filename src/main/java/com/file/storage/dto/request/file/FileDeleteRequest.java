@@ -5,13 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-public class FileDeleteRequest {
+public class FileDeleteRequest extends FileRequest {
 
     private String path;
 
-    private String owner;
+    public FileDeleteRequest(String owner, String path) {
+        super(owner);
+        this.path = path;
+    }
 }

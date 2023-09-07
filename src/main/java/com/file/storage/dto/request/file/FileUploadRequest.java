@@ -10,9 +10,12 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @Getter
 @Setter
-public class FileUploadRequest {
+public class FileUploadRequest extends FileRequest {
 
     private MultipartFile file;
 
-    private String owner;
+    public FileUploadRequest(String owner, MultipartFile file) {
+        super(owner);
+        this.file = file;
+    }
 }

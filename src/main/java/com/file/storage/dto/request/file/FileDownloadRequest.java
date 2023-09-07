@@ -5,15 +5,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-public class FileDownloadRequest {
+public class FileDownloadRequest extends FileRequest {
 
     private String path;
 
     private String name;
 
-    private String owner;
+    public FileDownloadRequest(String owner, String path, String name) {
+        super(owner);
+        this.path = path;
+        this.name = name;
+    }
 }
