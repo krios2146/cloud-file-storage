@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class FolderRenameRequest {
+public class FolderRenameRequest extends FolderRequest {
 
     private String currentName;
 
@@ -17,5 +17,10 @@ public class FolderRenameRequest {
 
     private String path;
 
-    private String owner;
+    public FolderRenameRequest(String owner, String currentName, String newName, String path) {
+        super(owner);
+        this.currentName = currentName;
+        this.newName = newName;
+        this.path = path;
+    }
 }

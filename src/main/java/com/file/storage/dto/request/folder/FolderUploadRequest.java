@@ -12,9 +12,12 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class FolderUploadRequest {
+public class FolderUploadRequest extends FolderRequest {
 
     private List<MultipartFile> files;
 
-    private String owner;
+    public FolderUploadRequest(String owner, List<MultipartFile> files) {
+        super(owner);
+        this.files = files;
+    }
 }

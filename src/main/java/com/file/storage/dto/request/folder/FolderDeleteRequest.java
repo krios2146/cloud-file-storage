@@ -9,9 +9,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class FolderDeleteRequest {
+public class FolderDeleteRequest extends FolderRequest {
 
     private String path;
 
-    private String owner;
+    public FolderDeleteRequest(String owner, String path) {
+        super(owner);
+        this.path = path;
+    }
 }
