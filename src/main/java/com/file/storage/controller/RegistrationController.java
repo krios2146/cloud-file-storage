@@ -1,6 +1,6 @@
 package com.file.storage.controller;
 
-import com.file.storage.dto.UserRegistrationRequest;
+import com.file.storage.dto.request.UserRegistrationRequest;
 import com.file.storage.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
