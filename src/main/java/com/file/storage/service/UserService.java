@@ -1,6 +1,6 @@
 package com.file.storage.service;
 
-import com.file.storage.dto.request.UserRegistrationRequest;
+import com.file.storage.dto.UserRegistrationRequest;
 import com.file.storage.model.User;
 import com.file.storage.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

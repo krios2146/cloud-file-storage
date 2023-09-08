@@ -2,10 +2,10 @@ package com.file.storage.service;
 
 import com.file.storage.config.MinioBucketConfiguration;
 import com.file.storage.dto.MinioObjectDto;
-import com.file.storage.dto.request.file.FileDeleteRequest;
-import com.file.storage.dto.request.file.FileDownloadRequest;
-import com.file.storage.dto.request.file.FileRenameRequest;
-import com.file.storage.dto.request.file.FileUploadRequest;
+import com.file.storage.dto.file.FileDeleteRequest;
+import com.file.storage.dto.file.FileDownloadRequest;
+import com.file.storage.dto.file.FileRenameRequest;
+import com.file.storage.dto.file.FileUploadRequest;
 import io.minio.*;
 import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;

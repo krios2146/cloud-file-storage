@@ -1,8 +1,8 @@
 package com.file.storage.controller;
 
-import com.file.storage.dto.request.folder.FolderDeleteRequest;
-import com.file.storage.dto.request.folder.FolderRenameRequest;
-import com.file.storage.dto.request.folder.FolderUploadRequest;
+import com.file.storage.dto.folder.FolderDeleteRequest;
+import com.file.storage.dto.folder.FolderRenameRequest;
+import com.file.storage.dto.folder.FolderUploadRequest;
 import com.file.storage.service.FolderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

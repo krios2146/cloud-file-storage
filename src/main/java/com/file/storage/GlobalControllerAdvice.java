@@ -1,6 +1,6 @@
 package com.file.storage;
 
-import com.file.storage.dto.request.UserRegistrationRequest;
+import com.file.storage.dto.UserRegistrationRequest;
 import com.file.storage.exception.InvalidRegistrationRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;

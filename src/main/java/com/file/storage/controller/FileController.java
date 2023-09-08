@@ -1,9 +1,9 @@
 package com.file.storage.controller;
 
-import com.file.storage.dto.request.file.FileDeleteRequest;
-import com.file.storage.dto.request.file.FileDownloadRequest;
-import com.file.storage.dto.request.file.FileRenameRequest;
-import com.file.storage.dto.request.file.FileUploadRequest;
+import com.file.storage.dto.file.FileDeleteRequest;
+import com.file.storage.dto.file.FileDownloadRequest;
+import com.file.storage.dto.file.FileRenameRequest;
+import com.file.storage.dto.file.FileUploadRequest;
 import com.file.storage.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;

@@ -1,11 +1,11 @@
 package com.file.storage.controller;
 
 import com.file.storage.dto.MinioObjectDto;
-import com.file.storage.dto.request.file.FileDeleteRequest;
-import com.file.storage.dto.request.file.FileRenameRequest;
-import com.file.storage.dto.request.file.FileUploadRequest;
-import com.file.storage.dto.request.folder.FolderDeleteRequest;
-import com.file.storage.dto.request.folder.FolderUploadRequest;
+import com.file.storage.dto.file.FileDeleteRequest;
+import com.file.storage.dto.file.FileRenameRequest;
+import com.file.storage.dto.file.FileUploadRequest;
+import com.file.storage.dto.folder.FolderDeleteRequest;
+import com.file.storage.dto.folder.FolderUploadRequest;
 import com.file.storage.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

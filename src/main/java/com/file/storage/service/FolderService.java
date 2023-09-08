@@ -2,9 +2,9 @@ package com.file.storage.service;
 
 import com.file.storage.config.MinioBucketConfiguration;
 import com.file.storage.dto.MinioObjectDto;
-import com.file.storage.dto.request.folder.FolderDeleteRequest;
-import com.file.storage.dto.request.folder.FolderRenameRequest;
-import com.file.storage.dto.request.folder.FolderUploadRequest;
+import com.file.storage.dto.folder.FolderDeleteRequest;
+import com.file.storage.dto.folder.FolderRenameRequest;
+import com.file.storage.dto.folder.FolderUploadRequest;
 import io.minio.*;
 import io.minio.messages.DeleteError;
 import io.minio.messages.DeleteObject;
