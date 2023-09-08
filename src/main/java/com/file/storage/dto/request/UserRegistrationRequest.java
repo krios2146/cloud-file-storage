@@ -14,14 +14,14 @@ import lombok.Setter;
 @Setter
 public class UserRegistrationRequest {
 
-    @NotBlank
+    @NotBlank(message = "Username cannot be empty")
     private String username;
 
-    @NotBlank
+    @NotBlank(message = "Password cannot be empty")
     @Size(min = 5, message = "Password must be longer than 5 symbols")
     private String password;
 
-    @NotBlank
-    @Email
+    @NotBlank(message = "Email cannot be empty")
+    @Email(message = "Email is invalid")
     private String email;
 }
