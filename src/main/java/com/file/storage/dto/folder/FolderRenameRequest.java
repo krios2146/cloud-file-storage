@@ -1,4 +1,4 @@
-package com.file.storage.dto.request.folder;
+package com.file.storage.dto.folder;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
