@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-import static com.file.storage.BreadcrumbsUtils.getBreadcrumbLinksForPath;
-import static com.file.storage.BreadcrumbsUtils.getFolderNamesForPath;
+import static com.file.storage.util.BreadcrumbsUtils.getBreadcrumbLinksForPath;
+import static com.file.storage.util.BreadcrumbsUtils.getFolderNamesForPath;
 
 @Controller
 @RequestMapping("/")
