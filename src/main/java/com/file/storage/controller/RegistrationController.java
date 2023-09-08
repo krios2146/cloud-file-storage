@@ -1,7 +1,7 @@
 package com.file.storage.controller;
 
 import com.file.storage.dto.UserRegistrationRequest;
-import com.file.storage.exception.InvalidRegistrationRequestException;
+import com.file.storage.exception.InvalidUserRegistrationRequestException;
 import com.file.storage.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class RegistrationController {
     @PostMapping
     public String register(@Valid @ModelAttribute("userRegistrationRequest") UserRegistrationRequest userRegistrationRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new InvalidRegistrationRequestException(getErrorMessage(bindingResult));
+            throw new InvalidUserRegistrationRequestException(getErrorMessage(bindingResult));
         }
 
         userService.register(userRegistrationRequest);
