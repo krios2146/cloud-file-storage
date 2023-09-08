@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.file.storage.MinioRootFolderUtils.getUserRootFolderPrefix;
+import static com.file.storage.util.MinioRootFolderUtils.getUserRootFolderPrefix;
 
 @Service
 @RequiredArgsConstructor

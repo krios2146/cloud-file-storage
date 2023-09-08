@@ -17,8 +17,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.file.storage.MinioRootFolderUtils.getUserRootFolderPrefix;
-import static com.file.storage.MinioRootFolderUtils.removeUserRootFolderPrefix;
+import static com.file.storage.util.MinioRootFolderUtils.getUserRootFolderPrefix;
+import static com.file.storage.util.MinioRootFolderUtils.removeUserRootFolderPrefix;
 
 @Service
 @RequiredArgsConstructor
