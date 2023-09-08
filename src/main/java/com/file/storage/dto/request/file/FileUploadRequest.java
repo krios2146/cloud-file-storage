@@ -1,5 +1,6 @@
 package com.file.storage.dto.request.file;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 public class FileUploadRequest extends FileRequest {
 
+    @NotBlank(message = "You must specify the file to upload")
     private MultipartFile file;
 
     public FileUploadRequest(String owner, MultipartFile file) {
