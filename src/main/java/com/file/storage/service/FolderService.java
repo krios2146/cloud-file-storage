@@ -59,13 +59,18 @@ public class FolderService {
                                 .object(getUserRootFolderPrefix(file.getOwner()) + file.getPath())
                                 .build())
                         .build());
+
+                FolderDeleteRequest folderDeleteRequest = new FolderDeleteRequest();
+
+                folderDeleteRequest.setPath(folderRenameRequest.getPath());
+                folderDeleteRequest.setOwner(folderRenameRequest.getOwner());
+
+                deleteFolder(folderDeleteRequest);
             }
             catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
-
-        deleteFolder(new FolderDeleteRequest(folderRenameRequest.getPath(), folderRenameRequest.getOwner()));
     }
 
     public void deleteFolder(FolderDeleteRequest folderDeleteRequest) {
