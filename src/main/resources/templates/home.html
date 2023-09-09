@@ -50,6 +50,10 @@
                     </button>
                 </form>
 
+                <!-- Badges -->
+                <div class="alert alert-success" th:if="${success}" th:text="${success}"></div>
+                <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+
                 <!-- Inner container -->
                 <div class="container-fluid d-flex flex-column rounded-4 bg-light py-3 px-4"
                      style="min-height: 50vh;">
