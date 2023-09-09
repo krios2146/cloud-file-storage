@@ -24,7 +24,7 @@ public class SearchController {
     public String search(@AuthenticationPrincipal User user, @RequestParam("query") String query, Model model) {
         List<MinioObjectDto> results = searchService.search(user.getUsername(), query);
         model.addAttribute("searchResults", results.isEmpty() ? null : results);
-        model.addAttribute("username", user.getUsername());
+
         return "search";
     }
 }

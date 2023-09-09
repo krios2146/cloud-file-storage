@@ -52,7 +52,6 @@ public class HomeController {
         if (user != null) {
             List<MinioObjectDto> userFiles = fileService.getUserFiles(user.getUsername(), path);
             model.addAttribute("files", userFiles);
-            model.addAttribute("username", user.getUsername());
         }
 
         return "home";
