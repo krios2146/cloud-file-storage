@@ -33,9 +33,12 @@
             <!-- Submit button -->
             <button class="btn btn-primary btn-block mb-4" type="submit" value="Log in">Login</button>
 
-            <!-- Badges -->
+            <!-- Spring Security Badges -->
             <div class="alert alert-success" th:if="${param.logout}">You have been logged out</div>
             <div class="alert alert-warning" th:if="${param.error}">Invalid username or/and password</div>
+
+            <!-- Badges -->
+            <div class="alert alert-success" th:if="${success}" th:text="${success}"></div>
 
             <!-- Register buttons -->
             <div class="text-center">
