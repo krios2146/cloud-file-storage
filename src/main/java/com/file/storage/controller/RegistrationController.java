@@ -3,6 +3,7 @@ package com.file.storage.controller;
 import com.file.storage.dto.UserRegistrationRequest;
 import com.file.storage.exception.InvalidUserRegistrationRequestException;
 import com.file.storage.service.UserService;
+import com.file.storage.util.ValidationUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -12,8 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import static com.file.storage.util.ValidationUtils.getErrorMessage;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 @RequestMapping("/registration")
@@ -30,13 +31,16 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public String register(@Valid @ModelAttribute("userRegistrationRequest") UserRegistrationRequest userRegistrationRequest, BindingResult bindingResult) {
+    public RedirectView register(@Valid @ModelAttribute("userRegistrationRequest") UserRegistrationRequest userRegistrationRequest,
+                                 BindingResult bindingResult,
+                                 RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            throw new InvalidUserRegistrationRequestException(getErrorMessage(bindingResult));
+            throw new InvalidUserRegistrationRequestException(ValidationUtils.getErrorMessage(bindingResult));
         }
 
         userService.register(userRegistrationRequest);
 
-        return "redirect:/login";
+        redirectAttributes.addFlashAttribute("success", "Registration is successful, please login");
+        return new RedirectView("/login", true);
     }
 }
