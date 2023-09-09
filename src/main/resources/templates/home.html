@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -55,7 +55,7 @@
                      style="min-height: 50vh;">
 
                     <!-- Breadcrumbs -->
-                    <nav aria-label="breadcrumb" class="mb-4" th:if="${username}">
+                    <nav aria-label="breadcrumb" class="mb-4" sec:authorize="isAuthenticated()">
                         <ol class="breadcrumb fs-4">
                             <li class="breadcrumb-item">
                                 <a th:class="${breadcrumbLinks == null ? 'breadcrumb-item active' : ''}"
@@ -72,7 +72,7 @@
 
                     <!-- Not Authorized Message -->
                     <div class="my-auto d-flex flex-column justify-content-center align-items-center"
-                         th:unless="${username}">
+                         sec:authorize="!isAuthenticated()">
                         <img class="w-25" th:src="@{/img/error.png}">
                         <p class="lead">
                             You are not logged in, please <a class="fw-normal" th:href="@{login}">login</a> to see
@@ -120,7 +120,8 @@
                                                     <form th:action="@{/folders}" th:method="delete"
                                                           th:object="${folderDeleteRequest}">
                                                         <input th:name="path" th:value="${file.path}" type="hidden">
-                                                        <input th:name="owner" th:value="${username}" type="hidden">
+                                                        <input th:name="owner" th:value="${#authentication.name}"
+                                                               type="hidden">
                                                         <button class="dropdown-item" type="submit">Delete</button>
                                                     </form>
                                                 </li>
@@ -152,7 +153,7 @@
                                         <form th:action="@{/files}" th:method="get"
                                               th:object="${fileDownloadRequest}">
                                             <input th:name="path" th:value="${file.path}" type="hidden">
-                                            <input th:name="owner" th:value="${username}" type="hidden">
+                                            <input th:name="owner" th:value="${#authentication.name}" type="hidden">
                                             <input th:name="name" th:value="${file.name}" type="hidden">
                                             <button class="stretched-link" style="border: none"
                                                     type="submit"></button>
@@ -184,7 +185,8 @@
                                                     <form th:action="@{/files}" th:method="delete"
                                                           th:object="${fileDeleteRequest}">
                                                         <input th:name="path" th:value="${file.path}" type="hidden">
-                                                        <input th:name="owner" th:value="${username}" type="hidden">
+                                                        <input th:name="owner" th:value="${#authentication.name}"
+                                                               type="hidden">
                                                         <button class="dropdown-item" type="submit">Delete</button>
                                                     </form>
                                                 </li>
