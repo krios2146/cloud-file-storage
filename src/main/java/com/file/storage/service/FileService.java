@@ -77,10 +77,12 @@ public class FileService {
                             .build())
                     .build());
 
-            deleteFile(new FileDeleteRequest(
-                    fileRenameRequest.getPath(),
-                    fileRenameRequest.getOwner())
-            );
+            FileDeleteRequest fileDeleteRequest = new FileDeleteRequest();
+
+            fileDeleteRequest.setPath(fileRenameRequest.getPath());
+            fileDeleteRequest.setOwner(fileRenameRequest.getOwner());
+
+            deleteFile(fileDeleteRequest);
         }
         catch (Exception e) {
             throw new RuntimeException(e);
@@ -127,6 +129,14 @@ public class FileService {
         return files;
     }
 
+    /**
+     * Fetches name of the file from the given path.
+     * If the path doesn't contain a file - the path itself will be returned
+     * Example: {@code getFileNameFromPath("root/user/documents/doc.txt")} will return doc.txt
+     *
+     * @param path path with the file
+     * @return name of the file with extension or the path itself if no file was found
+     */
     private static String getFileNameFromPath(String path) {
         if (!path.contains("/")) {
             return path;
