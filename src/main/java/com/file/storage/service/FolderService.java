@@ -5,6 +5,7 @@ import com.file.storage.dto.MinioObjectDto;
 import com.file.storage.dto.folder.FolderDeleteRequest;
 import com.file.storage.dto.folder.FolderRenameRequest;
 import com.file.storage.dto.folder.FolderUploadRequest;
+import com.file.storage.exception.folder.FolderOperationException;
 import io.minio.*;
 import io.minio.messages.DeleteError;
 import io.minio.messages.DeleteObject;
@@ -38,7 +39,7 @@ public class FolderService {
                     .build());
         }
         catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new FolderOperationException("There is an error while uploading the folder, try again later");
         }
     }
 
@@ -68,7 +69,7 @@ public class FolderService {
                 deleteFolder(folderDeleteRequest);
             }
             catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new FolderOperationException("There is an error while renaming the folder, try again later");
             }
         }
     }
@@ -89,7 +90,7 @@ public class FolderService {
                 deleteErrorResult.get();
             }
             catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new FolderOperationException("There is an error while deleting the folder, try again later");
             }
         });
     }

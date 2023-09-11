@@ -6,6 +6,7 @@ import com.file.storage.dto.file.FileDeleteRequest;
 import com.file.storage.dto.file.FileDownloadRequest;
 import com.file.storage.dto.file.FileRenameRequest;
 import com.file.storage.dto.file.FileUploadRequest;
+import com.file.storage.exception.file.FileOperationException;
 import io.minio.*;
 import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +45,7 @@ public class FileService {
             return new ByteArrayResource(object.readAllBytes());
         }
         catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new FileOperationException("There is an error while downloading the file, try again later");
         }
     }
 
@@ -58,7 +59,7 @@ public class FileService {
                     .build());
         }
         catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new FileOperationException("There is an error while uploading the file, try again later");
         }
     }
 
@@ -85,7 +86,7 @@ public class FileService {
             deleteFile(fileDeleteRequest);
         }
         catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new FileOperationException("There is an error while renaming the file, try again later");
         }
     }
 
@@ -97,7 +98,7 @@ public class FileService {
                     .build());
         }
         catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new FileOperationException("There is an error while deleting the file, try again later");
         }
     }
 
@@ -122,7 +123,7 @@ public class FileService {
                 files.add(object);
             }
             catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new FileOperationException("There is an error while receiving the files, try again later");
             }
         });
 
