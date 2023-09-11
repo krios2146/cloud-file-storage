@@ -1,7 +1,9 @@
 package com.file.storage;
 
 import com.file.storage.exception.InvalidUserRegistrationRequestException;
+import com.file.storage.exception.file.FileOperationException;
 import com.file.storage.exception.file.FileRequestException;
+import com.file.storage.exception.folder.FolderOperationException;
 import com.file.storage.exception.folder.FolderRequestException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,6 +29,20 @@ public class GlobalControllerAdvice {
 
     @ExceptionHandler(FolderRequestException.class)
     public RedirectView handleInvalidFileRequests(FolderRequestException e, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("error", e.getMessage());
+
+        return new RedirectView("/", true);
+    }
+
+    @ExceptionHandler(FileOperationException.class)
+    public RedirectView handleInvalidFileRequests(FileOperationException e, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("error", e.getMessage());
+
+        return new RedirectView("/", true);
+    }
+
+    @ExceptionHandler(FolderOperationException.class)
+    public RedirectView handleInvalidFileRequests(FolderOperationException e, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", e.getMessage());
 
         return new RedirectView("/", true);
