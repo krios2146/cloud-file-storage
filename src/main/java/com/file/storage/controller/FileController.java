@@ -54,7 +54,6 @@ public class FileController {
 
         fileService.uploadFile(fileUploadRequest);
 
-
         redirectAttributes.addFlashAttribute("success", "File uploaded successfully");
         return new RedirectView("/");
     }
@@ -83,9 +82,9 @@ public class FileController {
             throw new InvalidFileDeleteRequestException(ValidationUtils.getErrorMessage(bindingResult));
         }
 
-        redirectAttributes.addFlashAttribute("success", "File deleted successfully");
         fileService.deleteFile(fileDeleteRequest);
 
+        redirectAttributes.addFlashAttribute("success", "File deleted successfully");
         return new RedirectView("/");
     }
 }

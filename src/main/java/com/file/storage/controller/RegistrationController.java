@@ -34,6 +34,7 @@ public class RegistrationController {
     public RedirectView register(@Valid @ModelAttribute("userRegistrationRequest") UserRegistrationRequest userRegistrationRequest,
                                  BindingResult bindingResult,
                                  RedirectAttributes redirectAttributes) {
+
         if (bindingResult.hasErrors()) {
             throw new InvalidUserRegistrationRequestException(ValidationUtils.getErrorMessage(bindingResult));
         }
@@ -41,6 +42,6 @@ public class RegistrationController {
         userService.register(userRegistrationRequest);
 
         redirectAttributes.addFlashAttribute("success", "Registration is successful, please login");
-        return new RedirectView("/login", true);
+        return new RedirectView("/login");
     }
 }
