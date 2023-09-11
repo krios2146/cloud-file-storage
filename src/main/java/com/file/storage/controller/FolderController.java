@@ -28,6 +28,9 @@ public class FolderController {
                                      BindingResult bindingResult,
                                      RedirectAttributes redirectAttributes) {
 
+        if (isFolderEmpty(folderUploadRequest)) {
+            throw new InvalidFolderUploadRequestException("Empty folder upload is not supported");
+        }
         if (bindingResult.hasErrors()) {
             throw new InvalidFolderUploadRequestException(ValidationUtils.getErrorMessage(bindingResult));
         }
@@ -66,5 +69,14 @@ public class FolderController {
 
         redirectAttributes.addFlashAttribute("success", "Folder deleted successfully");
         return new RedirectView("/");
+    }
+
+    private static boolean isFolderEmpty(FolderUploadRequest request) {
+        if (request.getFiles().size() == 1) {
+            String filename = request.getFiles().get(0).getOriginalFilename();
+
+            return filename == null || filename.isBlank();
+        }
+        return false;
     }
 }
