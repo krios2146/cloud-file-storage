@@ -108,6 +108,11 @@ public class FolderService {
         List<SnowballObject> objects = new ArrayList<>();
 
         for (MultipartFile file : files) {
+            // Empty file names will produce undeleteable bucket-named files
+            if (file.getOriginalFilename() == null || file.getOriginalFilename().isBlank()) {
+                continue;
+            }
+
             SnowballObject snowballObject = new SnowballObject(
                     getUserRootFolderPrefix(owner) + file.getOriginalFilename(),
                     file.getInputStream(),
