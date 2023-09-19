@@ -1,25 +1,21 @@
 package com.file.storage.config;
 
 import io.minio.MinioClient;
-import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = "minio.client")
-@Setter
+@RequiredArgsConstructor
 public class MinioClientConfiguration {
 
-    private String endpoint;
-    private String user;
-    private String password;
+    private final MinioClientProperties minioClientProperties;
 
     @Bean
     public MinioClient configuredMinioClient() {
         return MinioClient.builder()
-                .endpoint(endpoint)
-                .credentials(user, password)
+                .endpoint(minioClientProperties.getEndpoint())
+                .credentials(minioClientProperties.getUser(), minioClientProperties.getPassword())
                 .build();
     }
 }
