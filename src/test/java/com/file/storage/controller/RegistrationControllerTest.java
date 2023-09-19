@@ -1,7 +1,7 @@
 package com.file.storage.controller;
 
 import com.file.storage.config.TestWebSecurityConfiguration;
-import com.file.storage.dto.request.UserRegistrationRequest;
+import com.file.storage.dto.UserRegistrationRequest;
 import com.file.storage.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ class RegistrationControllerTest {
     private UserService userService;
 
     @Test
-    void register_nullFields_badRequest() throws Exception {
+    void register_nullFields_redirect() throws Exception {
         UserRegistrationRequest userRegistrationRequest = new UserRegistrationRequest(
                 null,
                 null,
@@ -40,13 +40,13 @@ class RegistrationControllerTest {
                 .content(userRegistrationRequest.toString())
                 .accept(MediaType.APPLICATION_FORM_URLENCODED)
         ).andExpect(
-                status().isBadRequest()
+                status().is3xxRedirection()
         );
         verify(userService, never()).register(any());
     }
 
     @Test
-    void register_nullUsername_badRequest() throws Exception {
+    void register_nullUsername_redirect() throws Exception {
         UserRegistrationRequest userRegistrationRequest = new UserRegistrationRequest(
                 null,
                 "qwerty",
@@ -58,13 +58,13 @@ class RegistrationControllerTest {
                 .content(userRegistrationRequest.toString())
                 .accept(MediaType.APPLICATION_FORM_URLENCODED)
         ).andExpect(
-                status().isBadRequest()
+                status().is3xxRedirection()
         );
         verify(userService, never()).register(any());
     }
 
     @Test
-    void register_nullPassword_badRequest() throws Exception {
+    void register_nullPassword_redirect() throws Exception {
         UserRegistrationRequest userRegistrationRequest = new UserRegistrationRequest(
                 "qwerty",
                 null,
@@ -76,13 +76,13 @@ class RegistrationControllerTest {
                 .content(userRegistrationRequest.toString())
                 .accept(MediaType.APPLICATION_FORM_URLENCODED)
         ).andExpect(
-                status().isBadRequest()
+                status().is3xxRedirection()
         );
         verify(userService, never()).register(any());
     }
 
     @Test
-    void register_nullEmail_badRequest() throws Exception {
+    void register_nullEmail_redirect() throws Exception {
         UserRegistrationRequest userRegistrationRequest = new UserRegistrationRequest(
                 "qwerty",
                 "qwerty",
@@ -94,13 +94,13 @@ class RegistrationControllerTest {
                 .content(userRegistrationRequest.toString())
                 .accept(MediaType.APPLICATION_FORM_URLENCODED)
         ).andExpect(
-                status().isBadRequest()
+                status().is3xxRedirection()
         );
         verify(userService, never()).register(any());
     }
 
     @Test
-    void register_badEmail_badRequest() throws Exception {
+    void register_badEmail_redirect() throws Exception {
         UserRegistrationRequest userRegistrationRequest = new UserRegistrationRequest(
                 "qwerty",
                 "qwerty",
@@ -112,13 +112,13 @@ class RegistrationControllerTest {
                 .content(userRegistrationRequest.toString())
                 .accept(MediaType.APPLICATION_FORM_URLENCODED)
         ).andExpect(
-                status().isBadRequest()
+                status().is3xxRedirection()
         );
         verify(userService, never()).register(any());
     }
 
     @Test
-    void register_shortPassword_badRequest() throws Exception {
+    void register_shortPassword_redirect() throws Exception {
         UserRegistrationRequest userRegistrationRequest = new UserRegistrationRequest(
                 "qwerty",
                 "qwe",
@@ -130,7 +130,7 @@ class RegistrationControllerTest {
                 .content(userRegistrationRequest.toString())
                 .accept(MediaType.APPLICATION_FORM_URLENCODED)
         ).andExpect(
-                status().isBadRequest()
+                status().is3xxRedirection()
         );
         verify(userService, never()).register(any());
     }
