@@ -1,4 +1,4 @@
-package com.file.storage;
+package com.file.storage.util;
 
 import org.junit.jupiter.api.Test;
 
