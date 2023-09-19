@@ -3,8 +3,6 @@ package com.file.storage.service;
 import com.file.storage.dto.UserRegistrationRequest;
 import com.file.storage.model.User;
 import com.file.storage.repository.UserRepository;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,19 +11,32 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Testcontainers
 @ActiveProfiles("dev")
 class UserServiceIntegrationTest {
 
+    private static final DockerImageName MINIO_IMAGE = DockerImageName.parse("quay.io/minio/minio");
+
     @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest");
+    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest");
+
+    @Container
+    private static final GenericContainer<?> minio = new GenericContainer<>(MINIO_IMAGE)
+            .withCommand("server /data")
+            .withEnv("MINIO_ROOT_USER", "user")
+            .withEnv("MINIO_ROOT_PASSWORD", "minio_password")
+            .withExposedPorts(9000);
 
     @Autowired
     private UserService userService;
@@ -71,21 +82,19 @@ class UserServiceIntegrationTest {
         assertEquals(1, userRepository.findAll().size(), "User should be saved only once");
     }
 
-    @BeforeAll
-    static void beforeAll() {
-        postgres.start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        postgres.stop();
-    }
-
     @DynamicPropertySource
     static void postgresProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", postgres::getJdbcUrl);
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
         registry.add("spring.datasource.driver-class-name", postgres::getDriverClassName);
+    }
+
+    @DynamicPropertySource
+    static void minioProperties(DynamicPropertyRegistry registry) {
+        registry.add("minio.client.endpoint", () -> "http://127.0.0.1:" + minio.getMappedPort(9000));
+        registry.add("minio.client.user", () -> "user");
+        registry.add("minio.client.password", () -> "minio_password");
+        registry.add("minio.bucket-name", () -> "user-files");
     }
 }
