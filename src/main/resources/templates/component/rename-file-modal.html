@@ -14,7 +14,7 @@
                     </div>
                     <input th:name="currentName" th:value="${file.name}" type="hidden">
                     <input th:name="path" th:value="${file.path}" type="hidden">
-                    <input th:name="owner" th:value="${username}" type="hidden">
+                    <input th:name="owner" th:value="${#authentication.name}" type="hidden">
                 </form>
             </div>
             <div class="modal-footer">

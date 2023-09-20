@@ -39,6 +39,8 @@
             <!-- Submit button -->
             <button class="btn btn-primary btn-block mb-4" type="submit">Register</button>
 
+            <div class="alert alert-warning" th:if="${error}" th:text="${error}">Invalid username or/and password</div>
+
             <!-- Register buttons -->
             <div class="text-center">
                 <p>Already have an account? <a href="/login" th:href="@{/login}">Login</a></p>

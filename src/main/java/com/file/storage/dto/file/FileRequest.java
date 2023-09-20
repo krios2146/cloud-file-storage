@@ -1,20 +1,17 @@
-package com.file.storage.dto;
+package com.file.storage.dto.file;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class FolderUploadRequest {
+public abstract class FileRequest {
 
-    private List<MultipartFile> files;
-
+    @NotBlank(message = "Can't get the owner of the file")
     private String owner;
 }
