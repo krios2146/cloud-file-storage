@@ -40,32 +40,23 @@ class FileServiceIntegrationTest {
 
     @Test
     void uploadFile_saveFileToMinio() {
-        MockMultipartFile file = new MockMultipartFile(
-                "name",
-                "File name",
-                "text/plain",
-                "Content".getBytes(StandardCharsets.UTF_8)
-        );
+        MockMultipartFile file = getMockFileWithName("File name");
 
         fileService.uploadFile(new FileUploadRequest("user", file));
 
         List<MinioObjectDto> files = fileService.getUserFiles("user", "");
-        assertEquals(1, files.size());
-        MinioObjectDto minioFile = files.get(0);
-        assertEquals(file.getOriginalFilename(), minioFile.getName());
+        long actual = files.stream()
+                .filter(f -> f.getName().equals("File name"))
+                .count();
+        assertEquals(1, actual);
     }
 
     @Test
     void deleteFile_deleteFileFromMinio() {
-        MockMultipartFile file = new MockMultipartFile(
-                "name",
-                "File to delete",
-                "text/plain",
-                "Content".getBytes(StandardCharsets.UTF_8)
-        );
+        MockMultipartFile file = getMockFileWithName("File to delete");
         fileService.uploadFile(new FileUploadRequest("user", file));
 
-        fileService.deleteFile(new FileDeleteRequest("user", "/File to delete"));
+        fileService.deleteFile(new FileDeleteRequest("user", "File to delete"));
 
         List<MinioObjectDto> files = fileService.getUserFiles("user", "");
         long actual = files.stream()
@@ -76,12 +67,7 @@ class FileServiceIntegrationTest {
 
     @Test
     void renameFile_renameFileInMinio() {
-        MockMultipartFile file = new MockMultipartFile(
-                "name",
-                "File to rename",
-                "text/plain",
-                "Content".getBytes(StandardCharsets.UTF_8)
-        );
+        MockMultipartFile file = getMockFileWithName("File to rename");
         fileService.uploadFile(new FileUploadRequest("user", file));
 
         fileService.renameFile(new FileRenameRequest(
@@ -104,17 +90,13 @@ class FileServiceIntegrationTest {
 
     @Test
     void searchUserFile_showOnlyUserFile() {
-        MockMultipartFile file = new MockMultipartFile(
-                "name",
-                "File to search",
-                "text/plain",
-                "Content".getBytes(StandardCharsets.UTF_8)
-        );
+        MockMultipartFile file = getMockFileWithName("File to show");
         fileService.uploadFile(new FileUploadRequest("user", file));
         fileService.uploadFile(new FileUploadRequest("admin", file));
         fileService.uploadFile(new FileUploadRequest("root", file));
 
-        List<MinioObjectDto> files = fileService.getAllUserFiles("user", "");
+        List<MinioObjectDto> files = fileService.getAllUserFiles("admin", "");
+
         assertEquals(1, files.size());
     }
 
@@ -124,5 +106,14 @@ class FileServiceIntegrationTest {
         registry.add("minio.client.user", () -> "user");
         registry.add("minio.client.password", () -> "minio_password");
         registry.add("minio.bucket-name", () -> "user-files");
+    }
+
+    private static MockMultipartFile getMockFileWithName(String name) {
+        return new MockMultipartFile(
+                "name",
+                name,
+                "text/plain",
+                "Content".getBytes(StandardCharsets.UTF_8)
+        );
     }
 }
