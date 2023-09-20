@@ -47,4 +47,11 @@ public class GlobalControllerAdvice {
 
         return new RedirectView("/", true);
     }
+
+    @ExceptionHandler(Exception.class)
+    public RedirectView handleAll(Exception e, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("error", e.getMessage());
+
+        return new RedirectView("/", true);
+    }
 }
