@@ -26,7 +26,8 @@ public class MinioBucketConfiguration {
             if (!bucketService.isBucketExists(bucketName)) {
                 bucketService.createBucket(bucketName);
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Bucket '" + bucketName + "' is not created", e);
         }
     }

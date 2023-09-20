@@ -1,7 +1,12 @@
 package com.file.storage.service;
 
 import com.file.storage.config.MinioBucketConfiguration;
-import com.file.storage.dto.*;
+import com.file.storage.dto.MinioObjectDto;
+import com.file.storage.dto.file.FileDeleteRequest;
+import com.file.storage.dto.file.FileDownloadRequest;
+import com.file.storage.dto.file.FileRenameRequest;
+import com.file.storage.dto.file.FileUploadRequest;
+import com.file.storage.exception.file.FileOperationException;
 import io.minio.*;
 import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +18,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.file.storage.MinioRootFolderUtils.getUserRootFolderPrefix;
-import static com.file.storage.MinioRootFolderUtils.removeUserRootFolderPrefix;
+import static com.file.storage.util.MinioRootFolderUtils.getUserRootFolderPrefix;
+import static com.file.storage.util.MinioRootFolderUtils.removeUserRootFolderPrefix;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +45,7 @@ public class FileService {
             return new ByteArrayResource(object.readAllBytes());
         }
         catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new FileOperationException("There is an error while downloading the file, try again later");
         }
     }
 
@@ -54,7 +59,7 @@ public class FileService {
                     .build());
         }
         catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new FileOperationException("There is an error while uploading the file, try again later");
         }
     }
 
@@ -73,13 +78,15 @@ public class FileService {
                             .build())
                     .build());
 
-            deleteFile(new FileDeleteRequest(
-                    fileRenameRequest.getPath(),
-                    fileRenameRequest.getOwner())
-            );
+            FileDeleteRequest fileDeleteRequest = new FileDeleteRequest();
+
+            fileDeleteRequest.setPath(fileRenameRequest.getPath());
+            fileDeleteRequest.setOwner(fileRenameRequest.getOwner());
+
+            deleteFile(fileDeleteRequest);
         }
         catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new FileOperationException("There is an error while renaming the file, try again later");
         }
     }
 
@@ -91,7 +98,7 @@ public class FileService {
                     .build());
         }
         catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new FileOperationException("There is an error while deleting the file, try again later");
         }
     }
 
@@ -116,13 +123,21 @@ public class FileService {
                 files.add(object);
             }
             catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new FileOperationException("There is an error while receiving the files, try again later");
             }
         });
 
         return files;
     }
 
+    /**
+     * Fetches name of the file from the given path.
+     * If the path doesn't contain a file - the path itself will be returned
+     * Example: {@code getFileNameFromPath("root/user/documents/doc.txt")} will return doc.txt
+     *
+     * @param path path with the file
+     * @return name of the file with extension or the path itself if no file was found
+     */
     private static String getFileNameFromPath(String path) {
         if (!path.contains("/")) {
             return path;

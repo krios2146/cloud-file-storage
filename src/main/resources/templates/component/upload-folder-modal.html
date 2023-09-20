@@ -11,7 +11,7 @@
                       th:object="${folderUploadRequest}">
                     <label class="form-label" for="folderUploadInput">Select folder</label>
                     <input class="form-control" id="folderUploadInput" th:name="files" type="file" webkitdirectory/>
-                    <input th:name="owner" th:value="${username}" type="hidden"/>
+                    <input th:name="owner" th:value="${#authentication.name}" type="hidden"/>
                 </form>
             </div>
             <div class="modal-footer">

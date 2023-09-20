@@ -18,23 +18,11 @@ public class SearchService {
     public List<MinioObjectDto> search(String username, String query) {
         List<MinioObjectDto> files = fileService.getAllUserFiles(username, "");
 
-        // delete files from paths
-        for (MinioObjectDto file : files) {
-            String path = file.getPath();
-            path = path.replace(file.getName(), "");
-            file.setPath(path);
-        }
-
         List<MinioObjectDto> foundFiles = files.stream()
                 .filter(file -> file.getName().contains(query))
                 .toList();
 
-        Set<MinioObjectDto> foundFolders = findAllMatchingFolders(
-                files.stream()
-                        .filter(file -> file.getPath().contains(query))
-                        .toList(),
-                query
-        );
+        Set<MinioObjectDto> foundFolders = findMatchingFolders(files, query);
 
         List<MinioObjectDto> results = new ArrayList<>();
 
@@ -44,10 +32,12 @@ public class SearchService {
         return results;
     }
 
-    private static Set<MinioObjectDto> findAllMatchingFolders(List<MinioObjectDto> folders, String query) {
-        Set<MinioObjectDto> matchingFoldersSet = new HashSet<>();
+    private static Set<MinioObjectDto> findMatchingFolders(List<MinioObjectDto> objects, String query) {
+        objects = removeFileNamesFromPath(objects);
 
-        for (MinioObjectDto folder : folders) {
+        Set<MinioObjectDto> matchingFolders = new HashSet<>();
+
+        for (MinioObjectDto folder : objects) {
             String path = folder.getPath();
             String[] parts = path.split("/");
 
@@ -56,7 +46,7 @@ public class SearchService {
             for (String part : parts) {
                 currentPath.append(part).append("/");
                 if (part.contains(query)) {
-                    matchingFoldersSet.add(new MinioObjectDto(
+                    matchingFolders.add(new MinioObjectDto(
                             folder.getOwner(),
                             true,
                             currentPath.toString(),
@@ -66,6 +56,17 @@ public class SearchService {
             }
         }
 
-        return matchingFoldersSet;
+        return matchingFolders;
+    }
+
+    private static List<MinioObjectDto> removeFileNamesFromPath(List<MinioObjectDto> files) {
+        return files.stream()
+                .peek(f -> {
+                    String path = f.getPath();
+                    String name = f.getName();
+
+                    f.setPath(path.replace(name, ""));
+                })
+                .toList();
     }
 }

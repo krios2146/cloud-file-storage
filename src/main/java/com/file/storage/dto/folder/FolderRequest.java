@@ -1,5 +1,6 @@
-package com.file.storage.dto;
+package com.file.storage.dto.folder;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,11 +10,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class FileDownloadRequest {
+public abstract class FolderRequest {
 
-    private String path;
-
-    private String name;
-
+    @NotBlank(message = "Can't get the owner of the file")
     private String owner;
 }

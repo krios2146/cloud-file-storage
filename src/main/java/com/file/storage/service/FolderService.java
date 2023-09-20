@@ -1,10 +1,11 @@
 package com.file.storage.service;
 
 import com.file.storage.config.MinioBucketConfiguration;
-import com.file.storage.dto.FolderDeleteRequest;
-import com.file.storage.dto.FolderRenameRequest;
-import com.file.storage.dto.FolderUploadRequest;
 import com.file.storage.dto.MinioObjectDto;
+import com.file.storage.dto.folder.FolderDeleteRequest;
+import com.file.storage.dto.folder.FolderRenameRequest;
+import com.file.storage.dto.folder.FolderUploadRequest;
+import com.file.storage.exception.folder.FolderOperationException;
 import io.minio.*;
 import io.minio.messages.DeleteError;
 import io.minio.messages.DeleteObject;
@@ -16,7 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.file.storage.MinioRootFolderUtils.getUserRootFolderPrefix;
+import static com.file.storage.util.MinioRootFolderUtils.getUserRootFolderPrefix;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +39,7 @@ public class FolderService {
                     .build());
         }
         catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new FolderOperationException("There is an error while uploading the folder, try again later");
         }
     }
 
@@ -59,13 +60,18 @@ public class FolderService {
                                 .object(getUserRootFolderPrefix(file.getOwner()) + file.getPath())
                                 .build())
                         .build());
+
+                FolderDeleteRequest folderDeleteRequest = new FolderDeleteRequest();
+
+                folderDeleteRequest.setPath(folderRenameRequest.getPath());
+                folderDeleteRequest.setOwner(folderRenameRequest.getOwner());
+
+                deleteFolder(folderDeleteRequest);
             }
             catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new FolderOperationException("There is an error while renaming the folder, try again later");
             }
         }
-
-        deleteFolder(new FolderDeleteRequest(folderRenameRequest.getPath(), folderRenameRequest.getOwner()));
     }
 
     public void deleteFolder(FolderDeleteRequest folderDeleteRequest) {
@@ -84,7 +90,7 @@ public class FolderService {
                 deleteErrorResult.get();
             }
             catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new FolderOperationException("There is an error while deleting the folder, try again later");
             }
         });
     }
@@ -103,6 +109,11 @@ public class FolderService {
         List<SnowballObject> objects = new ArrayList<>();
 
         for (MultipartFile file : files) {
+            // Empty file names will produce undeleteable bucket-named files
+            if (file.getOriginalFilename() == null || file.getOriginalFilename().isBlank()) {
+                continue;
+            }
+
             SnowballObject snowballObject = new SnowballObject(
                     getUserRootFolderPrefix(owner) + file.getOriginalFilename(),
                     file.getInputStream(),

@@ -22,9 +22,14 @@ public class SearchController {
 
     @GetMapping
     public String search(@AuthenticationPrincipal User user, @RequestParam("query") String query, Model model) {
+        if (query == null || query.isBlank()) {
+            throw new IllegalArgumentException("Search query cannot be empty");
+        }
+
         List<MinioObjectDto> results = searchService.search(user.getUsername(), query);
+
         model.addAttribute("searchResults", results.isEmpty() ? null : results);
-        model.addAttribute("username", user.getUsername());
+
         return "search";
     }
 }

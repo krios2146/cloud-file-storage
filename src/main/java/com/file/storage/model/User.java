@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,12 +23,16 @@ public class User {
     @UuidGenerator
     private UUID id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
+    @NotBlank
     private String username;
 
+    @Column(nullable = false)
+    @NotBlank
     private String password;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
+    @NotBlank
     private String email;
 
     private Set<Role> roles;
